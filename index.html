@@ -1,25 +1,128 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Photography Portfolio - Welcome</title>
-  <!-- Link to CSS -->
-  <link rel="stylesheet" href="css/style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>ZR Portfolio</title>
+    <link rel="stylesheet" href="css/style.css">
 </head>
-<body class="landing">
-  <div class="landing-container">
-    <div class="landing-left">
-      <h1 id="welcome-logo">Zachary Roulier</h1>
-      <p style="font-size: 1.5em; letter-spacing: 0.08cm;">Welcome to my portfolio of aerial photography</p>
-      <p style="font-size: 1em; letter-spacing: 0.08cm;">Click the button below to begin exploring my work</p>
-      <button id="enterBtn">ENTER SITE</button>
+
+<body>
+    <header class="site-header">
+        <div class="logo">
+            <a href="index.html" id="logo-name">ZACHARY ROULIER</a>
+            <div id="logo-subtitle">Aerial Photography Portfolio</div>
+        </div>
+    </header>
+
+    <div class="container">
+        <section id="collections">
+            <h2>Collections</h2>
+            <div class="collection-grid">
+                <div class="collection-item">
+                    <a href="collections/european-assortment.html">
+                        <img src="images/european-assortment-cover.jpg" alt="European Assortment Collection">
+                        <div class="collection-title">Europe</div>
+                    </a>
+                </div>
+                <div class="collection-item">
+                    <a href="collections/national-parks.html">
+                        <img src="images/national-parks-cover.jpg" alt="National Parks Collection">
+                        <div class="collection-title">National Parks</div>
+                    </a>
+                </div>
+                <div class="collection-item">
+                    <a href="collections/fall-foliage.html">
+                        <img src="images/fall-foliage-cover.jpg" alt="Fall Foliage Collection">
+                        <div class="collection-title">East Coast</div>
+                    </a>
+                </div>
+                <div class="collection-item">
+                    <a href="collections/dolomiti.html">
+                        <img src="images/dolomiti-cover.jpg" alt="Dolomiti Collection">
+                        <div class="collection-title">Dolomites</div>
+                    </a>
+                </div>
+                <div class="collection-item">
+                    <a href="collections/colorado.html">
+                        <img src="images/colorado-cover.jpg" alt="Colorado Collection">
+                        <div class="collection-title">Colorado</div>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <section id="about">
+            <h2>About</h2>
+            <p style="color: #888888;">
+                My work with aerial photography began in 2017 with my first drone purchase, the DJI Spark. My interest
+                was "sparked" rather quickly for capturing landscapes unseen by the human eye.<br><br><br>
+                In 2023, I purchased the DJI Mini 4 Pro in anticipation of a four month program in Europe. This drone
+                was a massive technological and photographic advancement to my preceding drone. With this, I was able to
+                capture memories from all of my travels across seven countries.<br><br><br>
+                Then in October 2024, I acquired the most advanced prosumer drone on the market available right now -
+                the DJI Air 3S. With this drone I have been able to break aerial barriers. Most noticeably, a novel
+                feature found on the Air 3S called free panoramic. You will find these photos in the Colorado collection
+                and every collection since 2025.<br><br><br>
+                My passion for aerial photography & videography was taken a step further when I acquired my FAA Part 107
+                drone license in November 2024. With this license, I am authorized by the FAA to operate my fleet of
+                drones for commercial applications.<br><br><br>
+                Going into 2025, I am exploring commercial use cases, such as real estate, golf courses, weddings, car
+                meets, and much more.<br><br><br>
+                Any inquiries to discuss partnering with me to capture photography or videography can be sent via the
+                contact page.
+            </p>
+        </section>
+
+        <section id="contact">
+            <h2>Contact</h2>
+            <form id="contactForm" action="https://formsubmit.co/zwroulier@gmail.com" method="POST">
+                <input type="hidden" name="_captcha" value="false">
+                <div class="form-group">
+                    <label for="name">Your Name:</label>
+                    <input type="text" id="name" name="name" required>
+                </div>
+                <div class="form-group">
+                    <label for="email">Email Address:</label>
+                    <input type="email" id="email" name="email" required>
+                </div>
+                <div class="form-group">
+                    <label for="message">Message:</label>
+                    <textarea id="message" name="message" rows="5" required></textarea>
+                </div>
+                <button type="submit">Submit</button>
+            </form>
+        </section>
     </div>
-    <div class="landing-right">
-      <img src="images/cover-photo.JPG" alt="Welcome Photo">
-    </div>
-  </div>
-  <!-- Link to JavaScript -->
-  <script src="js/main.js"></script>
+
+    <footer id="footer">
+        <p>© 2025 Zachary Roulier. All rights reserved</p>
+    </footer>
+
+    <script>
+        document.getElementById('contactForm').addEventListener('submit', function (e) {
+            e.preventDefault(); // Prevent default form submission
+            const formData = new FormData(this);
+
+            fetch(this.action, {
+                method: this.method,
+                body: formData,
+                headers: {
+                    'Accept': 'application/json'
+                }
+            }).then(response => {
+                if (response.ok) {
+                    alert('Your message has been sent. We will respond to you within 24 hours.');
+                    this.reset(); // Clear the form fields
+                } else {
+                    alert('Oops! There was a problem submitting your form.');
+                }
+            }).catch(error => {
+                alert('Oops! There was a problem submitting your form.');
+            });
+        });
+    </script>
 </body>
+
 </html>
