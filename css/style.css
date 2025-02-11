@@ -152,19 +152,24 @@ h2 {
     resize: none;
 }
 
-/* Gallery Grid for Collection Pages */
-.gallery-grid {
+.photo-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
     gap: 10px;
-    padding: 20px;
-    justify-items: center;
-}
-
-.gallery-grid img {
+  }
+  
+  .photo-item {
+    aspect-ratio: 16 / 9; /* Ensures consistent aspect ratio without cropping */
+  }
+  
+  .photo-item img {
     width: 100%;
-    height: auto;
-}
+    height: 100%;
+    object-fit: contain; /* Prevents images from being cut off */
+    display: block;
+    padding: 5px;
+    box-sizing: border-box;
+  }
 
 #footer {
     text-align: center;
