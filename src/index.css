@@ -1,0 +1,30 @@
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=Manrope:wght@200;300;400;500;600&display=swap');
+@import "tailwindcss";
+@source "../index.html";
+@source "../src/**/*.{js,ts,jsx,tsx}";
+
+@theme {
+  --font-serif: "Cormorant Garamond", serif;
+  --font-sans: "Manrope", sans-serif;
+}
+
+/* Custom Utilities from the original code */
+@utility text-stroke {
+  -webkit-text-stroke: 1px #2A2A2A;
+}
+
+@utility text-stroke-thin {
+  -webkit-text-stroke: 0.5px #2A2A2A;
+}
+
+/* Hide scrollbar */
+@utility no-scrollbar {
+  -ms-overflow-style: none;
+  /* IE and Edge */
+  scrollbar-width: none;
+
+  /* Firefox */
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
