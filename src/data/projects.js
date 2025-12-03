@@ -11,7 +11,7 @@ export const DATA = {
       subtitle: 'Italian Alpine Peaks',
       coords: '46.54° N, 11.61° E',
       year: '2024',
-      previewVideo: "/videos/dolomiti-preview.mp4", // Place file in public/videos/
+      previewVideo: "https://vimeo.com/1143263477", // Place file in public/videos/
       images: [
         {
           src: 'https://i.imgur.com/kfNO0iJ.jpg',
@@ -38,7 +38,7 @@ export const DATA = {
       subtitle: 'Fall Foliage',
       coords: '35.67° N, 139.65° E',
       year: '2023',
-      previewVideo: "/videos/aspen-preview.mp4", // Place file in public/videos/
+      previewVideo: "https://vimeo.com/1143263323", // Place file in public/videos/
       images: [
         {
           src: 'https://imgur.com/wTKWhxH.jpg',
@@ -74,7 +74,7 @@ export const DATA = {
       subtitle: 'Tulip Fields in Amsterdam',
       coords: '52.26° N, 4.54° E',
       year: '2024',
-      previewVideo: "/videos/keukenhof-preview.mp4", // Place file in public/videos/
+      previewVideo: "https://vimeo.com/1143263616", // Place file in public/videos/
       images: [
         {
           src: 'https://imgur.com/n4aAv4y.jpg',

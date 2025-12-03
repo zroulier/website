@@ -22,6 +22,7 @@ const Home = ({ setView, setActiveProject }) => {
                     {DATA.projects.map((project) => {
                         const isHovered = hoveredProject === project.id;
                         const isVimeo = project.previewVideo?.includes('vimeo.com');
+                        const vimeoId = isVimeo ? project.previewVideo.split('/').pop() : null;
 
                         return (
                             <div
@@ -29,15 +30,25 @@ const Home = ({ setView, setActiveProject }) => {
                                 className="absolute inset-0 transition-opacity duration-700 ease-in-out"
                                 style={{ opacity: isHovered ? 0.5 : 0 }}
                             >
-                                <video
-                                    src={project.previewVideo}
-                                    className="w-full h-full object-cover scale-110"
-                                    autoPlay
-                                    loop
-                                    muted
-                                    playsInline
-                                    preload="auto"
-                                />
+                                {isVimeo ? (
+                                    <iframe
+                                        src={`https://player.vimeo.com/video/${vimeoId}?background=1&autoplay=1&loop=1&byline=0&title=0`}
+                                        className="w-full h-full object-cover scale-110 pointer-events-none"
+                                        frameBorder="0"
+                                        allow="autoplay; fullscreen; picture-in-picture"
+                                        allowFullScreen
+                                    />
+                                ) : (
+                                    <video
+                                        src={project.previewVideo}
+                                        className="w-full h-full object-cover scale-110"
+                                        autoPlay
+                                        loop
+                                        muted
+                                        playsInline
+                                        preload="auto"
+                                    />
+                                )}
                             </div>
                         );
                     })}
