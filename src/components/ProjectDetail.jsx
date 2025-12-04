@@ -20,15 +20,32 @@ const ProjectDetail = ({ project }) => {
                 transition={{ duration: 0.8 }}
             >
                 {/* Hero Video (Local) */}
-                <motion.video
-                    src={project.previewVideo}
-                    className="absolute inset-0 w-full h-[110%] object-cover"
-                    style={{ y }}
-                    autoPlay
-                    loop
-                    muted
-                    playsInline
-                />
+                {/* Hero Video */}
+                {project.previewVideo?.includes('vimeo.com') ? (
+                    <motion.div
+                        className="absolute inset-0 w-screen h-[110%] left-1/2 -translate-x-1/2"
+                        style={{ y }}
+                    >
+                        <iframe
+                            src={`https://player.vimeo.com/video/${project.previewVideo.split('/').pop()}?background=1&autoplay=1&loop=1&byline=0&title=0`}
+                            className="w-full h-full object-cover pointer-events-none scale-125"
+                            frameBorder="0"
+                            allow="autoplay; fullscreen; picture-in-picture"
+                            allowFullScreen
+                            title={`${project.title} Preview`}
+                        />
+                    </motion.div>
+                ) : (
+                    <motion.video
+                        src={project.previewVideo}
+                        className="absolute inset-0 w-screen h-[110%] left-1/2 -translate-x-1/2 object-cover"
+                        style={{ y }}
+                        autoPlay
+                        loop
+                        muted
+                        playsInline
+                    />
+                )}
 
                 <div className="absolute inset-0 bg-black/20" />
 
