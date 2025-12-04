@@ -8,9 +8,23 @@ const MainLayout = ({ children, currentView, setView, activeProject }) => {
     const handleScroll = (e) => {
         const { scrollTop, scrollHeight, clientHeight } = e.target;
         const bottomThreshold = 50;
-        const scrolledThreshold = 50;
 
-        setIsScrolled(scrollTop > scrolledThreshold);
+        // Mobile Logic for Header Visibility
+        if (window.innerWidth < 768 && currentView === 'home') {
+            const gallerySection = document.getElementById('gallery-section');
+            if (gallerySection) {
+                const galleryRect = gallerySection.getBoundingClientRect();
+                // Hide header when gallery is near the top of the viewport (entering view)
+                setIsScrolled(galleryRect.top <= 100);
+            } else {
+                setIsScrolled(scrollTop > 50);
+            }
+        } else {
+            // Desktop / Other Views Logic
+            const scrolledThreshold = 50;
+            setIsScrolled(scrollTop > scrolledThreshold);
+        }
+
         setIsBottom(Math.abs(scrollHeight - clientHeight - scrollTop) < bottomThreshold);
     };
 
@@ -39,13 +53,13 @@ const MainLayout = ({ children, currentView, setView, activeProject }) => {
                     {activeProject ? activeProject.coords : '39.73° N, 104.99° W'}
                 </p>
                 <p className="text-xs uppercase tracking-widest font-light mt-1">
-                    {activeProject ? activeProject.title : 'Portfolio'}
+                    {activeProject ? activeProject.title : 'Home'}
                 </p>
             </div>
 
             {/* Bottom Right: Coordinates / Context (Fades in at bottom) */}
             <div
-                className={`fixed bottom-6 right-6 md:bottom-10 md:right-10 z-40 text-neutral-900 text-right transition-opacity duration-500 ${currentView === 'project' ? 'opacity-0 pointer-events-none' : (isBottom ? 'opacity-100' : 'opacity-0 pointer-events-none')}`}
+                className={`hidden md:block fixed bottom-6 right-6 md:bottom-10 md:right-10 z-40 text-neutral-900 text-right transition-opacity duration-500 ${currentView === 'project' ? 'opacity-0 pointer-events-none' : (isBottom ? 'opacity-100' : 'opacity-0 pointer-events-none')}`}
             >
                 <p
                     className="text-xs font-mono opacity-80"
@@ -53,12 +67,12 @@ const MainLayout = ({ children, currentView, setView, activeProject }) => {
                     {activeProject ? activeProject.coords : '39.73° N, 104.99° W'}
                 </p>
                 <p className="text-xs uppercase tracking-widest font-light mt-1">
-                    {activeProject ? activeProject.title : 'Portfolio'}
+                    {activeProject ? activeProject.title : 'Home'}
                 </p>
             </div>
 
-            {/* Bottom Left: Menu */}
-            <div className="fixed bottom-6 left-6 md:bottom-10 md:left-10 z-40 flex flex-col items-start gap-2 text-neutral-900">
+            {/* Bottom Left: Menu (Desktop) */}
+            <div className="hidden md:flex fixed bottom-10 left-10 z-40 flex-col items-start gap-2 text-neutral-900">
                 <button
                     onClick={() => setView('about')}
                     className="text-xs uppercase tracking-[0.2em] hover:italic transition-all"
@@ -68,6 +82,22 @@ const MainLayout = ({ children, currentView, setView, activeProject }) => {
                 <button
                     onClick={() => setView('contact')}
                     className="text-xs uppercase tracking-[0.2em] hover:italic transition-all"
+                >
+                    [ Contact ]
+                </button>
+            </div>
+
+            {/* Mobile Bottom Bar */}
+            <div className="md:hidden fixed bottom-0 left-0 w-full z-50 bg-[#F2F0EB]/90 backdrop-blur-sm border-t border-neutral-200 py-4 px-6 flex justify-between items-center text-neutral-900">
+                <button
+                    onClick={() => setView('about')}
+                    className="text-xs uppercase tracking-[0.2em]"
+                >
+                    [ About ]
+                </button>
+                <button
+                    onClick={() => setView('contact')}
+                    className="text-xs uppercase tracking-[0.2em]"
                 >
                     [ Contact ]
                 </button>
