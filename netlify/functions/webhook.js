@@ -9,6 +9,7 @@ export default async (req, context) => {
     const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
 
     let event;
+
     try {
         const body = await req.text();
         event = stripe.webhooks.constructEvent(body, sig, webhookSecret);
@@ -20,19 +21,21 @@ export default async (req, context) => {
     if (event.type === 'payment_intent.succeeded') {
         const paymentIntent = event.data.object;
 
-        // 1. Get the email securely (handles both standard and latest_charge locations)
-        const email = paymentIntent.receipt_email || paymentIntent.latest_charge?.receipt_email;
+        // --- THE FIX IS HERE ---
+        // 1. Try the direct field
+        // 2. Try the charges array (where it usually hides in webhooks)
+        const email = paymentIntent.receipt_email ||
+            paymentIntent.charges?.data?.[0]?.billing_details?.email;
 
-        // 2. Define print links locally to prevent import crashes
+        console.log("Found email:", email); // This will show up in Netlify Function logs
+
         const printId = paymentIntent.metadata.printId;
 
-        // Map your Print IDs to their download links here
         const printLinks = {
             "1": "https://imgur.com/yJyNjt6.jpg",
             "2": "https://imgur.com/another-image.jpg"
         };
 
-        // Fallback link if ID is not found
         const fileLink = printLinks[printId] || "https://imgur.com/yJyNjt6.jpg";
 
         if (email) {
