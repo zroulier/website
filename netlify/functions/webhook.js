@@ -19,27 +19,33 @@ export default async (req, context) => {
     }
 
     if (event.type === 'payment_intent.succeeded') {
-        const paymentIntent = event.data.object;
+        const id = event.data.object.id;
 
-        // --- THE FIX IS HERE ---
-        // 1. Try the direct field
-        // 2. Try the charges array (where it usually hides in webhooks)
-        const email = paymentIntent.receipt_email ||
-            paymentIntent.charges?.data?.[0]?.billing_details?.email;
+        try {
+            // 1. FETCH FRESH DATA FROM STRIPE
+            // This guarantees we get the email, even if the webhook payload was incomplete.
+            const paymentIntent = await stripe.paymentIntents.retrieve(id, {
+                expand: ['latest_charge']
+            });
 
-        console.log("Found email:", email); // This will show up in Netlify Function logs
+            console.log("Full Payment Intent Retrieved");
 
-        const printId = paymentIntent.metadata.printId;
+            // 2. Find the email (Look in every possible hiding spot)
+            const email = paymentIntent.receipt_email ||
+                paymentIntent.latest_charge?.receipt_email ||
+                paymentIntent.latest_charge?.billing_details?.email;
 
-        const printLinks = {
-            "1": "https://imgur.com/yJyNjt6.jpg",
-            "2": "https://imgur.com/another-image.jpg"
-        };
+            console.log("Found email:", email);
 
-        const fileLink = printLinks[printId] || "https://imgur.com/yJyNjt6.jpg";
+            // 3. Define print links
+            const printId = paymentIntent.metadata.printId;
+            const printLinks = {
+                "1": "https://imgur.com/yJyNjt6.jpg",
+                "2": "https://imgur.com/another-image.jpg"
+            };
+            const fileLink = printLinks[printId] || "https://imgur.com/yJyNjt6.jpg";
 
-        if (email) {
-            try {
+            if (email) {
                 await resend.emails.send({
                     from: 'Zachary Roulier <prints@zacharyroulier.com>',
                     to: email,
@@ -50,13 +56,14 @@ export default async (req, context) => {
                         <a href="${fileLink}" style="padding: 10px 20px; background-color: #2A2A2A; color: white; text-decoration: none; border-radius: 5px;">Download Print</a>
                     `
                 });
-                console.log(`Email sent to ${email}`);
-            } catch (error) {
-                console.error('Error sending email:', error);
-                return new Response("Error sending email", { status: 500 });
+                console.log(`Email successfully sent to ${email}`);
+            } else {
+                console.error('CRITICAL: No email found in PaymentIntent or Charge object.');
             }
-        } else {
-            console.log('No email found in payment intent');
+
+        } catch (error) {
+            console.error('Error processing payment:', error);
+            return new Response(`Server Error: ${error.message}`, { status: 500 });
         }
     }
 
