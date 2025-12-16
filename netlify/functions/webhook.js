@@ -1,5 +1,6 @@
 import Stripe from 'stripe';
 import { Resend } from 'resend';
+import { prints } from '../../src/data/prints.js';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 const resend = new Resend(process.env.RESEND_API_KEY);
@@ -24,15 +25,9 @@ export default async (req, context) => {
         const email = paymentIntent.receipt_email; // Ensure LinkAuthenticationElement is used on frontend
         const printId = paymentIntent.metadata.printId;
 
-        // In a real app, you'd lookup the specific file URL based on printId
-        // For now, we'll send a generic or specific link
-        const downloadLinks = {
-            '1': 'https://imgur.com/yJyNjt6.jpg', // Replace with real high-res download links
-            '2': 'https://imgur.com/aDlwriY.jpg',
-            '3': 'https://imgur.com/PpjX5Uw.jpg'
-        };
-
-        const fileLink = downloadLinks[printId] || 'https://imgur.com/yJyNjt6.jpg';
+        // Lookup print details from shared data
+        const print = prints.find(p => p.id.toString() === printId.toString());
+        const fileLink = print ? print.src : 'https://imgur.com/yJyNjt6.jpg';
 
         if (email) {
             try {
