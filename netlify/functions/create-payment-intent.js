@@ -1,19 +1,17 @@
 import Stripe from 'stripe';
-import { prints } from '../../src/data/prints.js';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
 const calculateOrderAmount = (printId) => {
-    // Look up prince in shared data
-    // printId comes in as a string or number, ensure comparison works
-    const print = prints.find(p => p.id.toString() === printId.toString());
+    // SECURITY: Define prices locally on server to prevent import crashes
+    const prices = {
+        '1': 15000, // $150.00
+        '2': 15000,
+        '3': 15000
+    };
 
-    if (print) {
-        return print.price * 100; // Convert to cents
-    }
-
-    // Fallback security price (though validation should ideally happen)
-    return 15000;
+    // Fallback security price
+    return prices[printId] || 15000;
 };
 
 export default async (req, context) => {
