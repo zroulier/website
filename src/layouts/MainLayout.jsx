@@ -1,5 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
+import { Sparkles } from 'lucide-react';
 
 const MainLayout = ({ children, currentView, setView, activeProject }) => {
     const [isScrolled, setIsScrolled] = React.useState(false);
@@ -37,9 +38,13 @@ const MainLayout = ({ children, currentView, setView, activeProject }) => {
             >
                 <button
                     onClick={() => setView('home')}
-                    className="text-sm font-bold tracking-widest uppercase hover:opacity-50 transition-opacity"
+                    className="block hover:opacity-50 transition-opacity"
                 >
-                    Zachary Roulier
+                    <img
+                        src="/signature.png"
+                        alt="Zachary Roulier"
+                        className="h-8 md:h-10 w-auto brightness-0 invert"
+                    />
                 </button>
             </div>
 
@@ -87,19 +92,47 @@ const MainLayout = ({ children, currentView, setView, activeProject }) => {
                 </button>
             </div>
 
+            {/* Prints Trigger - Desktop (Bottom Center) */}
+            <div className="hidden md:flex fixed bottom-10 left-1/2 -translate-x-1/2 z-40 text-[#7D7259]">
+                <button
+                    onClick={() => setView('prints')}
+                    className="group relative flex items-center justify-center"
+                >
+                    <motion.div
+                        whileHover={{ rotate: 180, scale: 1.2 }}
+                        transition={{ duration: 0.5 }}
+                        className="p-2"
+                    >
+                        <Sparkles size={25} className="text-[#7D7259]" />
+                    </motion.div>
+
+                    <span className="absolute -top-8 left-1/2 -translate-x-1/2 whitespace-nowrap text-xs uppercase tracking-widest opacity-0 group-hover:opacity-100 transition-all duration-500 translate-y-2 group-hover:translate-y-0">
+                        Purchase Prints
+                    </span>
+                </button>
+            </div>
+
             {/* Mobile Bottom Bar */}
             <div className="md:hidden fixed bottom-0 left-0 w-full z-50 bg-[#F2F0EB]/90 backdrop-blur-sm border-t border-neutral-200 py-4 px-6 flex justify-between items-center text-neutral-900">
+                <div className="flex gap-6">
+                    <button
+                        onClick={() => setView('about')}
+                        className="text-xs uppercase tracking-[0.2em]"
+                    >
+                        [ About ]
+                    </button>
+                    <button
+                        onClick={() => setView('contact')}
+                        className="text-xs uppercase tracking-[0.2em]"
+                    >
+                        [ Contact ]
+                    </button>
+                </div>
                 <button
-                    onClick={() => setView('about')}
+                    onClick={() => setView('prints')}
                     className="text-xs uppercase tracking-[0.2em]"
                 >
-                    [ About ]
-                </button>
-                <button
-                    onClick={() => setView('contact')}
-                    className="text-xs uppercase tracking-[0.2em]"
-                >
-                    [ Contact ]
+                    <Sparkles size={16} />
                 </button>
             </div>
 

@@ -5,6 +5,7 @@ import { DATA } from '../data/projects';
 
 const Home = ({ setView, setActiveProject }) => {
     const [hoveredProject, setHoveredProject] = useState(null);
+    const [isSideImageHovered, setIsSideImageHovered] = useState(false);
     const mobileSectionsRef = React.useRef([]);
 
     // Scroll to top on mount
@@ -194,14 +195,39 @@ const Home = ({ setView, setActiveProject }) => {
                         }
                     </div >
 
+
+
                     {/* Side Image */}
-                    < div className={`hidden md:block flex-1 relative transition-opacity duration-700 ease-in-out ${hoveredProject ? 'opacity-0' : 'opacity-100'}`}>
-                        <img
-                            src="https://imgur.com/PTrMzX0.jpg"
-                            alt="Decorative"
-                            className="w-full h-full object-cover rounded-sm"
-                        />
-                    </div >
+                    <div
+                        className={`hidden md:block flex-1 relative transition-opacity duration-700 ease-in-out ${hoveredProject ? 'opacity-0' : 'opacity-100'}`}
+                        onMouseEnter={() => setIsSideImageHovered(true)}
+                        onMouseLeave={() => setIsSideImageHovered(false)}
+                    >
+                        <div className="relative w-full h-full overflow-hidden rounded-sm">
+                            <motion.img
+                                src="https://imgur.com/xz0ymyK.jpg"
+                                alt="Decorative Main"
+                                className="absolute inset-0 w-full h-full object-cover"
+                                initial={{ opacity: 1, scale: 1 }}
+                                animate={{
+                                    opacity: isSideImageHovered ? 0 : 1,
+                                    scale: isSideImageHovered ? 1.1 : 1
+                                }}
+                                transition={{ duration: 0.7, ease: "easeInOut" }}
+                            />
+                            <motion.img
+                                src="https://imgur.com/PTrMzX0.jpg"
+                                alt="Decorative Hover"
+                                className="absolute inset-0 w-full h-full object-cover"
+                                initial={{ opacity: 0, scale: 1.1 }}
+                                animate={{
+                                    opacity: isSideImageHovered ? 1 : 0,
+                                    scale: isSideImageHovered ? 1 : 1.1
+                                }}
+                                transition={{ duration: 0.7, ease: "easeInOut" }}
+                            />
+                        </div>
+                    </div>
                 </div >
             </section >
 

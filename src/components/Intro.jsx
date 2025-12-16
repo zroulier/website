@@ -35,9 +35,11 @@ const Intro = ({ onComplete }) => {
                 animate={{ opacity: 1 }}
                 transition={{ delay: 2.5, duration: 1 }}
             >
-                <p className="font-sans text-2xl md:text-3xl tracking-[0.3em] text-[#2A2A2A]/60 uppercase">
-                    Zachary Roulier
-                </p>
+                <img
+                    src="/signature.png"
+                    alt="Zachary Roulier"
+                    className="w-80 md:w-96 h-auto opacity-80 brightness-0"
+                />
             </motion.div>
         </motion.div>
     );
