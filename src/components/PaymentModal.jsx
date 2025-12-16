@@ -10,13 +10,23 @@ import {
 import { motion, AnimatePresence } from 'framer-motion';
 
 // Initialize Stripe outside of component
-const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY);
+const publishableKey = import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY;
+if (!publishableKey) {
+    console.error("VITE_STRIPE_PUBLISHABLE_KEY is missing! Check your .env file.");
+}
+const stripePromise = loadStripe(publishableKey);
 
 const CheckoutForm = ({ onClose }) => {
     const stripe = useStripe();
     const elements = useElements();
     const [message, setMessage] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
+
+    useEffect(() => {
+        if (!stripe) console.log("Stripe not loaded yet.");
+        if (!elements) console.log("Elements not loaded yet.");
+        if (stripe && elements) console.log("Stripe and Elements ready!");
+    }, [stripe, elements]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
