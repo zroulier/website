@@ -1,5 +1,6 @@
 import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import PaymentModal from './PaymentModal';
 
 const Prints = ({ onClose }) => {
     const prints = [
@@ -9,37 +10,6 @@ const Prints = ({ onClose }) => {
     ];
 
     const [selectedPrint, setSelectedPrint] = React.useState(null);
-    const [isProcessing, setIsProcessing] = React.useState(false);
-
-    const handlePurchase = async (print) => {
-        setIsProcessing(true);
-        try {
-            const response = await fetch('/.netlify/functions/create-checkout', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    printId: print.id,
-                    title: print.title,
-                    price: print.price,
-                    image: print.src
-                }),
-            });
-
-            const data = await response.json();
-
-            if (data.url) {
-                window.location.href = data.url;
-            } else {
-                console.error('No checkout URL returned');
-                setIsProcessing(false);
-            }
-        } catch (error) {
-            console.error('Error creating checkout session:', error);
-            setIsProcessing(false);
-        }
-    };
 
     return (
         <motion.div
@@ -105,60 +75,11 @@ const Prints = ({ onClose }) => {
             {/* Purchase Modal */}
             <AnimatePresence>
                 {selectedPrint && (
-                    <motion.div
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        exit={{ opacity: 0 }}
-                        className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm"
-                        onClick={() => setSelectedPrint(null)}
-                    >
-                        <motion.div
-                            initial={{ scale: 0.9, opacity: 0 }}
-                            animate={{ scale: 1, opacity: 1 }}
-                            exit={{ scale: 0.9, opacity: 0 }}
-                            className="bg-[#F2F0EB] w-full max-w-4xl max-h-[90vh] overflow-y-auto flex flex-col md:flex-row shadow-2xl"
-                            onClick={(e) => e.stopPropagation()}
-                        >
-                            {/* Image Side */}
-                            <div className="w-full md:w-1/2 bg-[#E5E3DD]">
-                                {selectedPrint.src && (
-                                    <img
-                                        src={selectedPrint.src}
-                                        alt={selectedPrint.title}
-                                        className="w-full h-full object-cover"
-                                    />
-                                )}
-                            </div>
-
-                            {/* Content Side */}
-                            <div className="w-full md:w-1/2 p-8 md:p-12 flex flex-col justify-between">
-                                <div>
-                                    <h3 className="font-serif italic text-4xl md:text-5xl mb-4">{selectedPrint.title}</h3>
-                                    <p className="text-xs uppercase tracking-widest opacity-60 mb-8">Edition {selectedPrint.edition}</p>
-
-                                    <div className="space-y-4 text-sm font-light text-[#2A2A2A]/80 mb-12">
-                                        <p>High-quality fine art print on archival paper. Signed and numbered by the artist.</p>
-                                        <p>Dimensions: 24" x 36" (Framing available upon request)</p>
-                                    </div>
-                                </div>
-
-                                <div>
-                                    <div className="flex justify-between items-center mb-8 border-b border-[#2A2A2A]/10 pb-4">
-                                        <span className="font-sans text-sm uppercase tracking-widest">Price</span>
-                                        <span className="font-serif text-2xl">${selectedPrint.price}</span>
-                                    </div>
-
-                                    <button
-                                        onClick={() => handlePurchase(selectedPrint)}
-                                        disabled={isProcessing}
-                                        className="w-full bg-[#2A2A2A] text-[#F2F0EB] py-4 text-xs uppercase tracking-[0.2em] hover:bg-[#7D7259] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                                    >
-                                        {isProcessing ? 'Processing...' : 'Purchase Print'}
-                                    </button>
-                                </div>
-                            </div>
-                        </motion.div>
-                    </motion.div>
+                    <PaymentModal
+                        key="payment-modal"
+                        print={selectedPrint}
+                        onClose={() => setSelectedPrint(null)}
+                    />
                 )}
             </AnimatePresence>
         </motion.div>

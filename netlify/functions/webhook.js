@@ -18,11 +18,11 @@ export default async (req, context) => {
         return new Response(`Webhook Error: ${err.message}`, { status: 400 });
     }
 
-    // Handle session completed event
-    if (event.type === 'checkout.session.completed') {
-        const session = event.data.object;
-        const email = session.customer_details.email;
-        const printId = session.metadata.printId;
+    // Handle payment intent succeeded event
+    if (event.type === 'payment_intent.succeeded') {
+        const paymentIntent = event.data.object;
+        const email = paymentIntent.receipt_email; // Ensure LinkAuthenticationElement is used on frontend
+        const printId = paymentIntent.metadata.printId;
 
         // In a real app, you'd lookup the specific file URL based on printId
         // For now, we'll send a generic or specific link
@@ -34,22 +34,25 @@ export default async (req, context) => {
 
         const fileLink = downloadLinks[printId] || 'https://imgur.com/yJyNjt6.jpg';
 
-        try {
-            await resend.emails.send({
-                from: 'Zachary Roulier <prints@zacharyroulier.com>', // User needs to verify domain in Resend
-                to: email,
-                subject: 'Your Digital Print Download',
-                html: `
-                    <h1>Thank you for your purchase!</h1>
-                    <p>Here is the link to download your high-resolution print:</p>
-                    <a href="${fileLink}" style="padding: 10px 20px; background-color: #2A2A2A; color: white; text-decoration: none; border-radius: 5px;">Download Print</a>
-                    <p>If you ordered a physical print, you will receive another email with shipping details soon.</p>
-                `
-            });
-            console.log(`Email sent to ${email}`);
-        } catch (error) {
-            console.error('Error sending email:', error);
-            // Don't fail the webhook response, just log error
+        if (email) {
+            try {
+                await resend.emails.send({
+                    from: 'Zachary Roulier <prints@zacharyroulier.com>', // User needs to verify domain in Resend
+                    to: email,
+                    subject: 'Your Digital Print Download',
+                    html: `
+                        <h1>Thank you for your purchase!</h1>
+                        <p>Here is the link to download your high-resolution print:</p>
+                        <a href="${fileLink}" style="padding: 10px 20px; background-color: #2A2A2A; color: white; text-decoration: none; border-radius: 5px;">Download Print</a>
+                        <p>If you ordered a physical print, you will receive another email with shipping details soon.</p>
+                    `
+                });
+                console.log(`Email sent to ${email}`);
+            } catch (error) {
+                console.error('Error sending email:', error);
+            }
+        } else {
+            console.log('No email found in payment intent');
         }
     }
 
