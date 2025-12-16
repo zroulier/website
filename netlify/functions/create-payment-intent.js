@@ -5,13 +5,13 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 const calculateOrderAmount = (printId) => {
     // SECURITY: Define prices locally on server to prevent import crashes
     const prices = {
-        '1': 15000, // $150.00
-        '2': 15000,
-        '3': 15000
+        '1': 50, // $0.50 for testing
+        '2': 50,
+        '3': 50
     };
 
     // Fallback security price
-    return prices[printId] || 15000;
+    return prices[printId] || 50;
 };
 
 export default async (req, context) => {
@@ -22,8 +22,11 @@ export default async (req, context) => {
     try {
         const { printId } = await req.json();
 
+        // Calculate amount
+        const amount = calculateOrderAmount(printId);
+
         const paymentIntent = await stripe.paymentIntents.create({
-            amount: calculateOrderAmount(printId),
+            amount,
             currency: "usd",
             automatic_payment_methods: {
                 enabled: true,
@@ -35,6 +38,7 @@ export default async (req, context) => {
 
         return new Response(JSON.stringify({
             clientSecret: paymentIntent.client_secret,
+            amount: amount, // Return the actual amount to show user
         }), {
             headers: { 'Content-Type': 'application/json' },
         });

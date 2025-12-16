@@ -18,7 +18,7 @@ if (!publishableKey) {
 
 const stripePromise = publishableKey ? loadStripe(publishableKey) : null;
 
-const CheckoutForm = ({ onClose }) => {
+const CheckoutForm = ({ onClose, amount }) => {
     const stripe = useStripe();
     const elements = useElements();
     const [message, setMessage] = useState(null);
@@ -55,6 +55,8 @@ const CheckoutForm = ({ onClose }) => {
         setIsLoading(false);
     };
 
+    const formattedAmount = amount ? (amount / 100).toFixed(2) : '';
+
     return (
         <form id="payment-form" onSubmit={handleSubmit} className="space-y-6">
             <LinkAuthenticationElement id="link-authentication-element" />
@@ -76,7 +78,7 @@ const CheckoutForm = ({ onClose }) => {
                         Processing...
                     </span>
                 ) : (
-                    "Pay Now"
+                    `Pay $${formattedAmount}`
                 )}
             </button>
 
@@ -93,6 +95,7 @@ const CheckoutForm = ({ onClose }) => {
 
 const PaymentModal = ({ print, onClose }) => {
     const [clientSecret, setClientSecret] = useState("");
+    const [confirmedAmount, setConfirmedAmount] = useState(null);
     const [isLoadingSecret, setIsLoadingSecret] = useState(true);
     const [error, setError] = useState(null);
 
@@ -119,6 +122,7 @@ const PaymentModal = ({ print, onClose }) => {
                         throw new Error(data.error);
                     }
                     setClientSecret(data.clientSecret);
+                    setConfirmedAmount(data.amount);
                     setIsLoadingSecret(false);
                 })
                 .catch((err) => {
@@ -129,6 +133,7 @@ const PaymentModal = ({ print, onClose }) => {
         } else {
             // If print is not available, reset states
             setClientSecret("");
+            setConfirmedAmount(null);
             setIsLoadingSecret(false);
             setError("No print selected for payment.");
         }
@@ -182,7 +187,10 @@ const PaymentModal = ({ print, onClose }) => {
             >
                 <div className="mb-8 text-center">
                     <h3 className="font-serif italic text-3xl mb-2">{print.title}</h3>
-                    <p className="text-xs uppercase tracking-widest opacity-60">Total: ${print.price}</p>
+                    {/* Show confirmed amount if available, otherwise loading state or fallback */}
+                    <p className="text-xs uppercase tracking-widest opacity-60">
+                        {confirmedAmount ? `Total Due: $${(confirmedAmount / 100).toFixed(2)}` : 'Calculating...'}
+                    </p>
                 </div>
 
                 {isLoadingSecret && (
@@ -200,7 +208,7 @@ const PaymentModal = ({ print, onClose }) => {
 
                 {!isLoadingSecret && !error && clientSecret && (
                     <Elements options={options} stripe={stripePromise}>
-                        <CheckoutForm onClose={onClose} />
+                        <CheckoutForm onClose={onClose} amount={confirmedAmount} />
                     </Elements>
                 )}
             </motion.div>
