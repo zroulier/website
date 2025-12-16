@@ -11,10 +11,12 @@ import { motion, AnimatePresence } from 'framer-motion';
 
 // Initialize Stripe outside of component
 const publishableKey = import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY;
+
 if (!publishableKey) {
-    console.error("VITE_STRIPE_PUBLISHABLE_KEY is missing! Check your .env file.");
+    console.error("VITE_STRIPE_PUBLISHABLE_KEY is missing! Check your .env file or redeploy Netlify.");
 }
-const stripePromise = loadStripe(publishableKey);
+
+const stripePromise = publishableKey ? loadStripe(publishableKey) : null;
 
 const CheckoutForm = ({ onClose }) => {
     const stripe = useStripe();
