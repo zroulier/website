@@ -50,9 +50,9 @@ export default async (req, context) => {
             // 3. Define print S3 filenames
             const printId = paymentIntent.metadata.printId;
             const s3Filenames = {
-                "1": "Denver Skyline.jpg",
-                "2": "Dolomites Sunset FINAL.jpg",
-                "3": "Lake Sunset.jpg"
+                "1": "Lake Sunset.jpg",
+                "2": "Denver Skyline.jpg",
+                "3": "Dolomites Sunset FINAL.jpg"
             };
 
             const fileName = s3Filenames[printId];
