@@ -1,8 +1,42 @@
-import React from 'react';
-import { motion } from 'framer-motion';
+import React, { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Wind, Mountain, Camera } from 'lucide-react';
 
 const Contact = ({ onClose }) => {
+    const [formData, setFormData] = useState({
+        name: '',
+        inquiryType: 'Select...',
+        message: ''
+    });
+    const [status, setStatus] = useState('idle'); // idle, loading, success, error
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        if (formData.inquiryType === 'Select...') return;
+
+        setStatus('loading');
+        try {
+            const response = await fetch('/.netlify/functions/send-contact-email', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(formData)
+            });
+
+            if (response.ok) {
+                setStatus('success');
+                setFormData({ name: '', inquiryType: 'Select...', message: '' });
+                setTimeout(() => setStatus('idle'), 5000);
+            } else {
+                const errorData = await response.json();
+                console.error('Backend Error:', errorData);
+                setStatus('error');
+            }
+        } catch (error) {
+            console.error('Network or Server Error:', error);
+            setStatus('error');
+        }
+    };
+
     return (
         <motion.div
             initial={{ opacity: 0 }}
@@ -10,7 +44,12 @@ const Contact = ({ onClose }) => {
             exit={{ opacity: 0 }}
             className="fixed inset-0 z-50 bg-[#2A2A2A] text-[#F2F0EB] flex items-center justify-center p-6"
         >
-            <button onClick={onClose} className="absolute top-8 right-8 text-xs uppercase tracking-widest hover:opacity-50 text-[#F2F0EB] z-50">Close</button>
+            <button
+                onClick={onClose}
+                className="absolute top-8 right-8 flex items-center gap-2 text-xs uppercase tracking-widest hover:gap-4 transition-all text-[#F2F0EB] z-50"
+            >
+                Close <div className="w-8 h-[1px] bg-current" />
+            </button>
 
 
             {/* Background Image Placeholder */}
@@ -38,19 +77,30 @@ const Contact = ({ onClose }) => {
 
                         <div>
                             <h3 className="text-xs uppercase tracking-widest opacity-50 mb-2">Direct</h3>
-                            <a href="#" className="text-xl border-b border-[#F2F0EB]/30 pb-1 hover:border-[#F2F0EB] transition-colors">zwroulierbusiness@gmail.com</a>
+                            <a href="mailto:zwroulierbusiness@gmail.com" className="text-xl border-b border-[#F2F0EB]/30 pb-1 hover:border-[#F2F0EB] transition-colors">zwroulierbusiness@gmail.com</a>
                         </div>
                     </div>
                 </div>
 
-                <form className="flex flex-col gap-8 pt-4" onSubmit={(e) => e.preventDefault()}>
+                <form className="flex flex-col gap-8 pt-4" onSubmit={handleSubmit}>
                     <div className="group">
                         <label className="block text-xs uppercase tracking-widest opacity-50 mb-2 group-focus-within:text-white transition-colors">Name</label>
-                        <input type="text" className="w-full bg-transparent border-b border-[#F2F0EB]/20 py-2 outline-none focus:border-[#F2F0EB] transition-colors font-serif text-xl" />
+                        <input
+                            required
+                            type="text"
+                            value={formData.name}
+                            onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                            className="w-full bg-transparent border-b border-[#F2F0EB]/20 py-2 outline-none focus:border-[#F2F0EB] transition-colors font-serif text-xl"
+                        />
                     </div>
                     <div className="group">
                         <label className="block text-xs uppercase tracking-widest opacity-50 mb-2 group-focus-within:text-white transition-colors">Inquiry Type</label>
-                        <select className="w-full bg-transparent border-b border-[#F2F0EB]/20 py-2 outline-none focus:border-[#F2F0EB] transition-colors font-serif text-xl appearance-none rounded-none">
+                        <select
+                            required
+                            value={formData.inquiryType}
+                            onChange={(e) => setFormData({ ...formData, inquiryType: e.target.value })}
+                            className="w-full bg-transparent border-b border-[#F2F0EB]/20 py-2 outline-none focus:border-[#F2F0EB] transition-colors font-serif text-xl appearance-none rounded-none"
+                        >
                             <option className="text-black">Select...</option>
                             <option className="text-black">Project Commission</option>
                             <option className="text-black">Print Inquiry</option>
@@ -59,12 +109,46 @@ const Contact = ({ onClose }) => {
                     </div>
                     <div className="group">
                         <label className="block text-xs uppercase tracking-widest opacity-50 mb-2 group-focus-within:text-white transition-colors">Message</label>
-                        <textarea rows="3" className="w-full bg-transparent border-b border-[#F2F0EB]/20 py-2 outline-none focus:border-[#F2F0EB] transition-colors font-serif text-xl resize-none"></textarea>
+                        <textarea
+                            required
+                            rows="3"
+                            value={formData.message}
+                            onChange={(e) => setFormData({ ...formData, message: e.target.value })}
+                            className="w-full bg-transparent border-b border-[#F2F0EB]/20 py-2 outline-none focus:border-[#F2F0EB] transition-colors font-serif text-xl resize-none"
+                        ></textarea>
                     </div>
 
-                    <button className="self-start mt-4 px-8 py-3 border border-[#F2F0EB]/30 hover:bg-[#F2F0EB] hover:text-[#2A2A2A] transition-all duration-300 uppercase text-xs tracking-[0.2em]">
-                        Send Request
-                    </button>
+                    <div className="flex flex-col gap-4">
+                        <button
+                            disabled={status === 'loading'}
+                            className="self-start mt-4 px-8 py-3 border border-[#F2F0EB]/30 hover:bg-[#F2F0EB] hover:text-[#2A2A2A] transition-all duration-300 uppercase text-xs tracking-[0.2em] disabled:opacity-50"
+                        >
+                            {status === 'loading' ? 'Sending...' : 'Send Request'}
+                        </button>
+
+                        <AnimatePresence>
+                            {status === 'success' && (
+                                <motion.p
+                                    initial={{ opacity: 0, y: 10 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    exit={{ opacity: 0 }}
+                                    className="text-xs uppercase tracking-widest text-green-400"
+                                >
+                                    Message sent successfully.
+                                </motion.p>
+                            )}
+                            {status === 'error' && (
+                                <motion.p
+                                    initial={{ opacity: 0, y: 10 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    exit={{ opacity: 0 }}
+                                    className="text-xs uppercase tracking-widest text-red-400"
+                                >
+                                    Error sending message. Please try again.
+                                </motion.p>
+                            )}
+                        </AnimatePresence>
+                    </div>
                 </form>
             </div>
         </motion.div>

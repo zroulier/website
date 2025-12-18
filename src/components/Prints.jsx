@@ -18,9 +18,9 @@ const Prints = ({ onClose }) => {
             <div className="min-h-screen px-6 py-20 md:p-20 flex flex-col relative">
                 <button
                     onClick={onClose}
-                    className="fixed top-8 right-8 z-50 text-xs uppercase tracking-widest hover:line-through mix-blend-difference text-[#2A2A2A]"
+                    className="fixed top-8 right-8 z-50 flex items-center gap-2 text-xs uppercase tracking-widest hover:gap-4 transition-all mix-blend-difference text-[#2A2A2A]"
                 >
-                    Close
+                    Close <div className="w-8 h-[1px] bg-current" />
                 </button>
 
                 <div className="max-w-7xl mx-auto w-full">

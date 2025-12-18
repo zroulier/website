@@ -202,7 +202,12 @@ const PaymentModal = ({ print, onClose }) => {
                 {error && (
                     <div className="text-center py-8">
                         <p className="text-red-500 mb-4">{error}</p>
-                        <button onClick={onClose} className="text-xs uppercase underline">Close</button>
+                        <button
+                            onClick={onClose}
+                            className="flex items-center gap-2 text-xs uppercase tracking-widest hover:gap-4 transition-all mx-auto mt-4"
+                        >
+                            Close <div className="w-8 h-[1px] bg-current" />
+                        </button>
                     </div>
                 )}
 

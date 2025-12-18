@@ -20,12 +20,17 @@ const About = ({ onClose }) => {
             </div>
 
             <div className="w-full md:w-1/2 h-1/2 md:h-full p-8 md:p-20 flex flex-col justify-center relative">
-                <button onClick={onClose} className="absolute top-8 right-8 text-xs uppercase tracking-widest hover:line-through">Close</button>
+                <button
+                    onClick={onClose}
+                    className="absolute top-8 right-8 flex items-center gap-2 text-xs uppercase tracking-widest hover:gap-4 transition-all"
+                >
+                    Close <div className="w-8 h-[1px] bg-current" />
+                </button>
 
                 <h2 className="text-sm uppercase tracking-widest text-neutral-400 mb-8">Philosophy</h2>
-                <p className="font-serif text-2xl md:text-4xl leading-relaxed text-[#2A2A2A] mb-8">
-                    Operating drones since 2017. <br />
-                    I chase the beauty in nature from the silence of the skies.
+                <p className="font-serif text-2xl md:text-3xl leading-relaxed text-[#2A2A2A] mb-8">
+                    Operating drones since 2017, <br />
+                    I have a mission to capture new perspectives of our world from above.
                 </p>
                 <div className="flex flex-col gap-4 text-sm text-neutral-600 font-light max-w-md">
                     <p>

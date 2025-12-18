@@ -1,8 +1,8 @@
 export const DATA = {
   intro: {
-    line1: "Perspective",
-    line2: "Defines",
-    line3: "Freedom."
+    line1: "Capturing",
+    line2: "Perspectives",
+    line3: "From Above"
   },
   projects: [
     {
@@ -27,7 +27,7 @@ export const DATA = {
         },
         {
           src: 'https://imgur.com/vBtdrcB.jpg',
-          details: { drone: "DJI Mini 4 Pro", settings: "auto", postProcessing: "yes" }
+          details: { drone: "DJI Mini 4 Pro", settings: "auto", postProcessing: "color grading, photoshop (moon)" }
         },
       ],
       description: "A tour through the Italian Dolomites. The peaks of the Dolomites are a collection of limestone mountains in northeastern Italy."
@@ -37,7 +37,7 @@ export const DATA = {
       title: 'ASPEN',
       subtitle: 'Fall Foliage',
       coords: '35.67° N, 139.65° E',
-      year: '2023',
+      year: '2025',
       previewVideo: "https://vimeo.com/1143263323", // Place file in public/videos/
       images: [
         {
@@ -66,7 +66,7 @@ export const DATA = {
         },
       ],
       videoUrl: "https://www.youtube.com/embed/Ls4uBZI7ieA", // INSERT VIDEO LINK HERE
-      description: "A tour through the Aspen mountains in Colorado during peak fall foliage This typically occurs in late September."
+      description: "A tour through Aspen during peak fall foliage. This typically occurs in late September. Scroll to the end for a short cinematic video!"
     },
     {
       id: 'amsterdam',
@@ -78,22 +78,22 @@ export const DATA = {
       images: [
         {
           src: 'https://imgur.com/n4aAv4y.jpg',
-          details: { drone: 'DJI Mini 4 Pro', settings: 'ISO 100, 1/50s', postProcessing: 'DaVinci Resolve' }
+          details: { drone: 'DJI Mini 4 Pro', settings: 'auto', postProcessing: 'none' }
         },
         {
           src: 'https://imgur.com/AqADiZB.jpg',
-          details: { drone: 'DJI Mini 4 Pro', settings: 'ISO 100, 1/200s', postProcessing: 'DaVinci Resolve' }
+          details: { drone: 'DJI Mini 4 Pro', settings: 'auto', postProcessing: 'none' }
         },
         {
           src: 'https://imgur.com/qaFoTtx.jpg',
-          details: { drone: 'DJI Mini 4 Pro', settings: 'ISO 200, 1/100s', postProcessing: 'DaVinci Resolve' }
+          details: { drone: 'DJI Mini 4 Pro', settings: 'auto', postProcessing: 'none' }
         },
         {
           src: 'https://imgur.com/Kknpq08.jpg',
-          details: { drone: 'DJI Mini 4 Pro', settings: 'ISO 200, 1/100s', postProcessing: 'DaVinci Resolve' }
+          details: { drone: 'DJI Mini 4 Pro', settings: 'auto', postProcessing: 'none' }
         },
       ],
-      description: "Visiting the vibrant tulip fields of Keukenhof in Amsterdam. Peak tulip season occurs in late April."
+      description: "Visiting the vibrant tulip fields of Keukenhof in Amsterdam. Peak tulip season typicallyoccurs in late April."
     }
   ],
   gallery: [
