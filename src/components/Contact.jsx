@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Wind, Mountain, Camera } from 'lucide-react';
+import { Motorbike, Mountain, Camera } from 'lucide-react';
 
 const Contact = ({ onClose }) => {
     const [formData, setFormData] = useState({
@@ -63,15 +63,15 @@ const Contact = ({ onClose }) => {
 
             <div className="w-full max-w-4xl grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-24 relative z-10">
                 <div>
-                    <h2 className="font-serif text-5xl md:text-7xl italic mb-12">Let's work<br />together.</h2>
+                    <h2 className="font-serif text-5xl md:text-7xl italic mb-12">Let's work<br />together</h2>
 
                     <div className="space-y-8">
                         <div>
                             <h3 className="text-xs uppercase tracking-widest opacity-50 mb-2">Capabilities</h3>
                             <ul className="space-y-2 text-lg font-light">
-                                <li className="flex items-center gap-3"><Wind size={16} /> Drone Cinematography</li>
-                                <li className="flex items-center gap-3"><Mountain size={16} /> Extreme Sports Filming</li>
-                                <li className="flex items-center gap-3"><Camera size={16} /> Real Estate Filming & Photography</li>
+                                <li className="flex items-center gap-3"><Motorbike size={16} /> Car & Motorcycle Filming</li>
+                                <li className="flex items-center gap-3"><Mountain size={16} /> Sports Filming</li>
+                                <li className="flex items-center gap-3"><Camera size={16} /> Real Estate Video & Photography</li>
                             </ul>
                         </div>
 
@@ -105,6 +105,7 @@ const Contact = ({ onClose }) => {
                             <option className="text-black">Project Commission</option>
                             <option className="text-black">Print Inquiry</option>
                             <option className="text-black">Collaboration</option>
+                            <option className="text-black">Other</option>
                         </select>
                     </div>
                     <div className="group">

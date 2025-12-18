@@ -5,13 +5,13 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 const calculateOrderAmount = (printId) => {
     // SECURITY: Define prices locally on server to prevent import crashes
     const prices = {
-        '1': 50, // $0.50 for testing
-        '2': 50,
-        '3': 50
+        '1': 100, // $0.50 for testing
+        '2': 100,
+        '3': 100
     };
 
     // Fallback security price
-    return prices[printId] || 50;
+    return prices[printId] || 100;
 };
 
 export default async (req, context) => {
