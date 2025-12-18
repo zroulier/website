@@ -59,9 +59,11 @@ export default async (req, context) => {
 
             if (email && fileName) {
                 // 4. Generate a Secure Pre-signed URL for the S3 object (valid for 1 hour)
+                // We add ResponseContentDisposition to force the browser to download the file
                 const command = new GetObjectCommand({
                     Bucket: process.env.AWS_BUCKET_NAME,
                     Key: fileName,
+                    ResponseContentDisposition: `attachment; filename="${fileName}"`,
                 });
 
                 const downloadUrl = await getSignedUrl(s3Client, command, { expiresIn: 3600 });
