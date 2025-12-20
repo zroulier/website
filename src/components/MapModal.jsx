@@ -253,7 +253,7 @@ const MapModal = ({ isOpen, onClose, coordsString, title }) => {
     }, [isOpen, onClose]);
 
     useEffect(() => {
-        if (!isOpen || !parsedCoords) return;
+        if (!isOpen || !centerCoords) return;
 
         const initMap = () => {
             try {
