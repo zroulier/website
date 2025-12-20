@@ -66,7 +66,7 @@ export default async (req, context) => {
                     ResponseContentDisposition: `attachment; filename="${fileName}"`,
                 });
 
-                const downloadUrl = await getSignedUrl(s3Client, command, { expiresIn: 3600 });
+                const downloadUrl = await getSignedUrl(s3Client, command, { expiresIn: 43200 });
 
                 // 5. Send secure email
                 await resend.emails.send({
@@ -80,7 +80,7 @@ export default async (req, context) => {
                             <div style="margin: 40px 0;">
                                 <a href="${downloadUrl}" style="padding: 15px 30px; background-color: #2A2A2A; color: white; text-decoration: none; border-radius: 0px; text-transform: uppercase; font-size: 13px; letter-spacing: 2px;">Download Print</a>
                             </div>
-                            <p style="font-size: 12px; color: #666;">Note: This link is secure and will expire in 1 hour. Please download your file promptly.</p>
+                            <p style="font-size: 12px; color: #666;">Note: This link is secure and will expire in 12 hours.</p>
                         </div>
                     `
                 });

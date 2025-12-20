@@ -2,6 +2,8 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { Sparkles } from 'lucide-react';
 import { useNavigate, useLocation } from 'react-router-dom';
+import MapModal from '../components/MapModal';
+import { parseCoords } from '../utils/coords';
 
 const MainLayout = ({ children, activeProject }) => {
     const navigate = useNavigate();
@@ -10,6 +12,11 @@ const MainLayout = ({ children, activeProject }) => {
 
     const [isScrolled, setIsScrolled] = React.useState(false);
     const [isBottom, setIsBottom] = React.useState(false);
+    const [isMapOpen, setIsMapOpen] = React.useState(false);
+
+    const currentCoords = activeProject ? activeProject.coords : '39.73° N, 104.99° W';
+    const currentTitle = activeProject ? activeProject.title : 'Home';
+    const hasValidCoords = !!parseCoords(currentCoords);
 
     const handleScroll = (e) => {
         const { scrollTop, scrollHeight, clientHeight } = e.target;
@@ -43,7 +50,7 @@ const MainLayout = ({ children, activeProject }) => {
             >
                 <button
                     onClick={() => navigate('/')}
-                    className="block hover:opacity-50 transition-opacity"
+                    className="block"
                 >
                     <img
                         src="/signature.png"
@@ -57,13 +64,20 @@ const MainLayout = ({ children, activeProject }) => {
             <div
                 className={`fixed top-6 right-6 md:top-10 md:right-10 z-40 text-neutral-900 text-right transition-opacity duration-500 ${currentPath.startsWith('/project') ? 'opacity-0 pointer-events-none' : (isScrolled ? 'opacity-0 pointer-events-none' : 'opacity-100')}`}
             >
-                <p
-                    className="text-xs font-mono opacity-80"
-                >
-                    {activeProject ? activeProject.coords : '39.73° N, 104.99° W'}
-                </p>
+                {hasValidCoords ? (
+                    <button
+                        onClick={() => setIsMapOpen(true)}
+                        className="text-xs font-mono opacity-80 hover:opacity-100 border-b border-transparent hover:border-neutral-900 transition-all"
+                    >
+                        {currentCoords}
+                    </button>
+                ) : (
+                    <p className="text-xs font-mono opacity-80">
+                        {currentCoords}
+                    </p>
+                )}
                 <p className="text-xs uppercase tracking-widest font-light mt-1">
-                    {activeProject ? activeProject.title : 'Home'}
+                    {currentTitle}
                 </p>
             </div>
 
@@ -71,13 +85,20 @@ const MainLayout = ({ children, activeProject }) => {
             <div
                 className={`hidden md:block fixed bottom-6 right-6 md:bottom-10 md:right-10 z-40 text-neutral-900 text-right transition-opacity duration-500 ${currentPath.startsWith('/project') ? 'opacity-0 pointer-events-none' : (isBottom ? 'opacity-100' : 'opacity-0 pointer-events-none')}`}
             >
-                <p
-                    className="text-xs font-mono opacity-80"
-                >
-                    {activeProject ? activeProject.coords : '39.73° N, 104.99° W'}
-                </p>
+                {hasValidCoords ? (
+                    <button
+                        onClick={() => setIsMapOpen(true)}
+                        className="text-xs font-mono opacity-80 hover:opacity-100 border-b border-transparent hover:border-neutral-900 transition-all"
+                    >
+                        {currentCoords}
+                    </button>
+                ) : (
+                    <p className="text-xs font-mono opacity-80">
+                        {currentCoords}
+                    </p>
+                )}
                 <p className="text-xs uppercase tracking-widest font-light mt-1">
-                    {activeProject ? activeProject.title : 'Home'}
+                    {currentTitle}
                 </p>
             </div>
 
@@ -164,6 +185,12 @@ const MainLayout = ({ children, activeProject }) => {
             >
                 {children}
             </main>
+            <MapModal
+                isOpen={isMapOpen}
+                onClose={() => setIsMapOpen(false)}
+                coordsString={currentCoords}
+                title={currentTitle}
+            />
         </div>
     );
 };
