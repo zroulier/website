@@ -13,10 +13,16 @@ const MainLayout = ({ children, activeProject }) => {
     const [isScrolled, setIsScrolled] = React.useState(false);
     const [isBottom, setIsBottom] = React.useState(false);
     const [isMapOpen, setIsMapOpen] = React.useState(false);
+    const [frozenMapData, setFrozenMapData] = React.useState(null);
 
     const currentCoords = activeProject ? activeProject.coords : '39.73° N, 104.99° W';
     const currentTitle = activeProject ? activeProject.title : 'Home';
     const hasValidCoords = !!parseCoords(currentCoords);
+
+    const handleOpenMap = () => {
+        setFrozenMapData({ coords: currentCoords, title: currentTitle });
+        setIsMapOpen(true);
+    };
 
     const handleScroll = (e) => {
         const { scrollTop, scrollHeight, clientHeight } = e.target;
@@ -66,7 +72,7 @@ const MainLayout = ({ children, activeProject }) => {
             >
                 {hasValidCoords ? (
                     <button
-                        onClick={() => setIsMapOpen(true)}
+                        onClick={handleOpenMap}
                         className="text-xs font-mono opacity-80 hover:opacity-100 transform transition-transform duration-1000 hover:scale-110 origin-right"
                     >
                         {currentCoords}
@@ -87,7 +93,7 @@ const MainLayout = ({ children, activeProject }) => {
             >
                 {hasValidCoords ? (
                     <button
-                        onClick={() => setIsMapOpen(true)}
+                        onClick={handleOpenMap}
                         className="text-xs font-mono opacity-80 hover:opacity-100 transform transition-transform duration-1000 hover:scale-110 origin-right"
                     >
                         {currentCoords}
@@ -188,8 +194,8 @@ const MainLayout = ({ children, activeProject }) => {
             <MapModal
                 isOpen={isMapOpen}
                 onClose={() => setIsMapOpen(false)}
-                coordsString={currentCoords}
-                title={currentTitle}
+                coordsString={isMapOpen && frozenMapData ? frozenMapData.coords : currentCoords}
+                title={isMapOpen && frozenMapData ? frozenMapData.title : currentTitle}
             />
         </div>
     );

@@ -36,7 +36,7 @@ export const DATA = {
       id: 'aspen',
       title: 'ASPEN',
       subtitle: 'Fall Foliage',
-      coords: '35.67° N, 139.65° E',
+      coords: '39.19° N, 106.82° W',
       year: '2025',
       previewVideo: "https://vimeo.com/1143263323", // Place file in public/videos/
       images: [

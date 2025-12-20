@@ -367,7 +367,7 @@ const MapModal = ({ isOpen, onClose, coordsString, title }) => {
                         onClick={(e) => e.stopPropagation()}
                     >
                         {/* Header */}
-                        <div className="flex items-center justify-between p-6 border-b border-neutral-800 bg-[#1A1A1A]">
+                        <div className="absolute top-0 left-0 right-0 z-10 flex items-center justify-between p-6 border-b border-white/10 bg-black/30 backdrop-blur-md shadow-sm">
                             <div>
                                 <h3 className="text-[#F2F0EB] font-serif italic text-xl md:text-2xl">{title}</h3>
                                 <p className="text-xs font-mono text-neutral-400 mt-1">{coordsString}</p>
