@@ -9,6 +9,7 @@ const Home = ({ setActiveProject }) => {
     const [hoveredProject, setHoveredProject] = useState(null);
     const [isSideImageHovered, setIsSideImageHovered] = useState(false);
     const mobileSectionsRef = React.useRef([]);
+    const resetTimeoutRef = useRef(null);
 
     // Scroll to top on mount
     React.useEffect(() => {
@@ -165,12 +166,18 @@ const Home = ({ setActiveProject }) => {
                                 <motion.div
                                     key={project.id}
                                     onMouseEnter={() => {
+                                        if (resetTimeoutRef.current) {
+                                            clearTimeout(resetTimeoutRef.current);
+                                        }
                                         setHoveredProject(project.id);
                                         setActiveProject(project);
                                     }}
                                     onMouseLeave={() => {
                                         setHoveredProject(null);
-                                        setActiveProject(null);
+                                        // Delay resetting the active project coordinates
+                                        resetTimeoutRef.current = setTimeout(() => {
+                                            setActiveProject(null);
+                                        }, 3000);
                                     }}
                                     onClick={() => {
                                         navigate(`/project/${project.id}`);

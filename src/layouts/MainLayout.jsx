@@ -67,7 +67,7 @@ const MainLayout = ({ children, activeProject }) => {
                 {hasValidCoords ? (
                     <button
                         onClick={() => setIsMapOpen(true)}
-                        className="text-xs font-mono opacity-80 hover:opacity-100 border-b border-transparent hover:border-neutral-900 transition-all"
+                        className="text-xs font-mono opacity-80 hover:opacity-100 transform transition-transform duration-1000 hover:scale-110 origin-right"
                     >
                         {currentCoords}
                     </button>
@@ -88,7 +88,7 @@ const MainLayout = ({ children, activeProject }) => {
                 {hasValidCoords ? (
                     <button
                         onClick={() => setIsMapOpen(true)}
-                        className="text-xs font-mono opacity-80 hover:opacity-100 border-b border-transparent hover:border-neutral-900 transition-all"
+                        className="text-xs font-mono opacity-80 hover:opacity-100 transform transition-transform duration-1000 hover:scale-110 origin-right"
                     >
                         {currentCoords}
                     </button>

@@ -314,10 +314,21 @@ const MapModal = ({ isOpen, onClose, coordsString, title }) => {
 
                 googleMapRef.current = new window.google.maps.Map(mapRef.current, mapOptions);
 
+                const svgMarker = {
+                    path: "M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z",
+                    fillColor: "#7D7259",
+                    fillOpacity: 1,
+                    strokeWeight: 0,
+                    rotation: 0,
+                    scale: 2,
+                    anchor: new window.google.maps.Point(12, 22),
+                };
+
                 new window.google.maps.Marker({
                     position: parsedCoords,
                     map: googleMapRef.current,
-                    title: title
+                    title: title,
+                    icon: svgMarker
                 });
             } catch (error) {
                 console.error("Map init error:", error);
@@ -348,7 +359,7 @@ const MapModal = ({ isOpen, onClose, coordsString, title }) => {
 
                     {/* Modal Content */}
                     <motion.div
-                        className="relative w-full max-w-4xl bg-[#121212] border border-neutral-800 shadow-2xl overflow-hidden rounded-sm flex flex-col"
+                        className="relative w-full max-w-4xl bg-[#121212] border border-neutral-800 shadow-2xl overflow-hidden rounded-md flex flex-col"
                         initial={{ opacity: 0, scale: 0.95, y: 20 }}
                         animate={{ opacity: 1, scale: 1, y: 0 }}
                         exit={{ opacity: 0, scale: 0.95, y: 20 }}
