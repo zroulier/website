@@ -1,9 +1,11 @@
 import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useNavigate } from 'react-router-dom';
 import PaymentModal from './PaymentModal';
 import { prints } from '../data/prints';
 
-const Prints = ({ onClose }) => {
+const Prints = () => {
+    const navigate = useNavigate();
 
     const [selectedPrint, setSelectedPrint] = React.useState(null);
 
@@ -17,7 +19,7 @@ const Prints = ({ onClose }) => {
         >
             <div className="min-h-screen px-6 py-20 md:p-20 flex flex-col relative">
                 <button
-                    onClick={onClose}
+                    onClick={() => navigate('/')}
                     className="fixed top-8 right-8 z-50 flex items-center gap-2 text-xs uppercase tracking-widest hover:gap-4 transition-all mix-blend-difference text-[#2A2A2A]"
                 >
                     Close <div className="w-8 h-[1px] bg-current" />

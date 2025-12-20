@@ -1,9 +1,11 @@
 import React, { useState, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { ArrowRight } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import { DATA } from '../data/projects';
 
-const Home = ({ setView, setActiveProject }) => {
+const Home = ({ setActiveProject }) => {
+    const navigate = useNavigate();
     const [hoveredProject, setHoveredProject] = useState(null);
     const [isSideImageHovered, setIsSideImageHovered] = useState(false);
     const mobileSectionsRef = React.useRef([]);
@@ -44,6 +46,14 @@ const Home = ({ setView, setActiveProject }) => {
         };
     }, [setActiveProject]);
 
+    // Auto-scroll side image
+    React.useEffect(() => {
+        const interval = setInterval(() => {
+            setIsSideImageHovered(prev => !prev);
+        }, 5000);
+        return () => clearInterval(interval);
+    }, []);
+
     // Background Image Fade
     return (
         <>
@@ -60,8 +70,7 @@ const Home = ({ setView, setActiveProject }) => {
                             ref={el => mobileSectionsRef.current[i] = el}
                             className="relative w-full h-screen snap-start snap-always flex flex-col justify-center items-center overflow-hidden"
                             onClick={() => {
-                                setActiveProject(project);
-                                setView('project');
+                                navigate(`/project/${project.id}`);
                             }}
                         >
                             {/* Background Video */}
@@ -164,8 +173,7 @@ const Home = ({ setView, setActiveProject }) => {
                                         setActiveProject(null);
                                     }}
                                     onClick={() => {
-                                        setActiveProject(project);
-                                        setView('project');
+                                        navigate(`/project/${project.id}`);
                                     }}
                                     className="group cursor-pointer w-full md:w-auto relative"
                                 >
@@ -200,8 +208,6 @@ const Home = ({ setView, setActiveProject }) => {
                     {/* Side Image */}
                     <div
                         className={`hidden md:block flex-1 relative transition-opacity duration-700 ease-in-out ${hoveredProject ? 'opacity-0' : 'opacity-100'}`}
-                        onMouseEnter={() => setIsSideImageHovered(true)}
-                        onMouseLeave={() => setIsSideImageHovered(false)}
                     >
                         <div className="relative w-full h-full overflow-hidden rounded-sm">
                             <motion.img
@@ -213,7 +219,7 @@ const Home = ({ setView, setActiveProject }) => {
                                     opacity: isSideImageHovered ? 0 : 1,
                                     scale: isSideImageHovered ? 1.1 : 1
                                 }}
-                                transition={{ duration: 0.7, ease: "easeInOut" }}
+                                transition={{ duration: 1.1, ease: "easeInOut" }}
                             />
                             <motion.img
                                 src="https://imgur.com/PTrMzX0.jpg"
@@ -224,7 +230,7 @@ const Home = ({ setView, setActiveProject }) => {
                                     opacity: isSideImageHovered ? 1 : 0,
                                     scale: isSideImageHovered ? 1 : 1.1
                                 }}
-                                transition={{ duration: 0.7, ease: "easeInOut" }}
+                                transition={{ duration: 1.1, ease: "easeInOut" }}
                             />
                         </div>
                     </div>

@@ -1,7 +1,9 @@
 import React from 'react';
 import { motion } from 'framer-motion';
+import { useNavigate } from 'react-router-dom';
 
-const About = ({ onClose }) => {
+const About = () => {
+    const navigate = useNavigate();
     return (
         <motion.div
             initial={{ opacity: 0, y: "100%" }}
@@ -21,7 +23,7 @@ const About = ({ onClose }) => {
 
             <div className="w-full md:w-1/2 h-1/2 md:h-full p-8 md:p-20 flex flex-col justify-center relative">
                 <button
-                    onClick={onClose}
+                    onClick={() => navigate('/')}
                     className="absolute top-8 right-8 flex items-center gap-2 text-xs uppercase tracking-widest hover:gap-4 transition-all"
                 >
                     Close <div className="w-8 h-[1px] bg-current" />

@@ -6,7 +6,7 @@ export const DATA = {
   },
   projects: [
     {
-      id: 'italy',
+      id: 'dolomiti',
       title: 'DOLOMITI',
       subtitle: 'Italian Alpine Peaks',
       coords: '46.54° N, 11.61° E',
@@ -69,7 +69,7 @@ export const DATA = {
       description: "A tour through Aspen during peak fall foliage. This typically occurs in late September. Scroll to the end for a short cinematic video!"
     },
     {
-      id: 'amsterdam',
+      id: 'keukenhof',
       title: 'KEUKENHOF',
       subtitle: 'Tulip Fields in Amsterdam',
       coords: '52.26° N, 4.54° E',

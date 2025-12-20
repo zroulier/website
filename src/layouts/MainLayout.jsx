@@ -1,8 +1,13 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Sparkles } from 'lucide-react';
+import { useNavigate, useLocation } from 'react-router-dom';
 
-const MainLayout = ({ children, currentView, setView, activeProject }) => {
+const MainLayout = ({ children, activeProject }) => {
+    const navigate = useNavigate();
+    const location = useLocation();
+    const currentPath = location.pathname;
+
     const [isScrolled, setIsScrolled] = React.useState(false);
     const [isBottom, setIsBottom] = React.useState(false);
 
@@ -11,7 +16,7 @@ const MainLayout = ({ children, currentView, setView, activeProject }) => {
         const bottomThreshold = 50;
 
         // Mobile Logic for Header Visibility
-        if (window.innerWidth < 768 && currentView === 'home') {
+        if (window.innerWidth < 768 && currentPath === '/') {
             const gallerySection = document.getElementById('gallery-section');
             if (gallerySection) {
                 const galleryRect = gallerySection.getBoundingClientRect();
@@ -34,10 +39,10 @@ const MainLayout = ({ children, currentView, setView, activeProject }) => {
 
             {/* Top Left: Identity */}
             <div
-                className={`fixed top-6 left-6 md:top-10 md:left-10 z-40 mix-blend-difference text-[#F2F0EB] transition-opacity duration-500 ${currentView === 'project' ? 'opacity-0 pointer-events-none' : (isScrolled ? 'opacity-0 pointer-events-none' : 'opacity-100')}`}
+                className={`fixed top-6 left-6 md:top-10 md:left-10 z-40 mix-blend-difference text-[#F2F0EB] transition-opacity duration-500 ${currentPath.startsWith('/project') ? 'opacity-0 pointer-events-none' : (isScrolled ? 'opacity-0 pointer-events-none' : 'opacity-100')}`}
             >
                 <button
-                    onClick={() => setView('home')}
+                    onClick={() => navigate('/')}
                     className="block hover:opacity-50 transition-opacity"
                 >
                     <img
@@ -50,7 +55,7 @@ const MainLayout = ({ children, currentView, setView, activeProject }) => {
 
             {/* Top Right: Coordinates / Context (Fades out on scroll) */}
             <div
-                className={`fixed top-6 right-6 md:top-10 md:right-10 z-40 text-neutral-900 text-right transition-opacity duration-500 ${currentView === 'project' ? 'opacity-0 pointer-events-none' : (isScrolled ? 'opacity-0 pointer-events-none' : 'opacity-100')}`}
+                className={`fixed top-6 right-6 md:top-10 md:right-10 z-40 text-neutral-900 text-right transition-opacity duration-500 ${currentPath.startsWith('/project') ? 'opacity-0 pointer-events-none' : (isScrolled ? 'opacity-0 pointer-events-none' : 'opacity-100')}`}
             >
                 <p
                     className="text-xs font-mono opacity-80"
@@ -64,7 +69,7 @@ const MainLayout = ({ children, currentView, setView, activeProject }) => {
 
             {/* Bottom Right: Coordinates / Context (Fades in at bottom) */}
             <div
-                className={`hidden md:block fixed bottom-6 right-6 md:bottom-10 md:right-10 z-40 text-neutral-900 text-right transition-opacity duration-500 ${currentView === 'project' ? 'opacity-0 pointer-events-none' : (isBottom ? 'opacity-100' : 'opacity-0 pointer-events-none')}`}
+                className={`hidden md:block fixed bottom-6 right-6 md:bottom-10 md:right-10 z-40 text-neutral-900 text-right transition-opacity duration-500 ${currentPath.startsWith('/project') ? 'opacity-0 pointer-events-none' : (isBottom ? 'opacity-100' : 'opacity-0 pointer-events-none')}`}
             >
                 <p
                     className="text-xs font-mono opacity-80"
@@ -79,13 +84,13 @@ const MainLayout = ({ children, currentView, setView, activeProject }) => {
             {/* Bottom Left: Menu (Desktop) */}
             <div className="hidden md:flex fixed bottom-10 left-10 z-40 flex-col items-start gap-2 text-neutral-900">
                 <button
-                    onClick={() => setView('about')}
+                    onClick={() => navigate('/about')}
                     className="text-xs uppercase tracking-[0.2em] hover:italic transition-all"
                 >
                     [ About ]
                 </button>
                 <button
-                    onClick={() => setView('contact')}
+                    onClick={() => navigate('/contact')}
                     className="text-xs uppercase tracking-[0.2em] hover:italic transition-all"
                 >
                     [ Contact ]
@@ -95,7 +100,7 @@ const MainLayout = ({ children, currentView, setView, activeProject }) => {
             {/* Prints Trigger - Desktop (Bottom Center) */}
             <div className="hidden md:flex fixed bottom-10 left-1/2 -translate-x-1/2 z-40 text-[#7D7259]">
                 <button
-                    onClick={() => setView('prints')}
+                    onClick={() => navigate('/prints')}
                     className="group relative flex items-center justify-center"
                 >
                     <motion.div
@@ -116,20 +121,20 @@ const MainLayout = ({ children, currentView, setView, activeProject }) => {
             <div className="md:hidden fixed bottom-0 left-0 w-full z-50 bg-[#F2F0EB]/90 backdrop-blur-sm border-t border-neutral-200 py-4 px-6 flex justify-between items-center text-neutral-900">
                 <div className="flex gap-6">
                     <button
-                        onClick={() => setView('about')}
+                        onClick={() => navigate('/about')}
                         className="text-xs uppercase tracking-[0.2em]"
                     >
                         [ About ]
                     </button>
                     <button
-                        onClick={() => setView('contact')}
+                        onClick={() => navigate('/contact')}
                         className="text-xs uppercase tracking-[0.2em]"
                     >
                         [ Contact ]
                     </button>
                 </div>
                 <button
-                    onClick={() => setView('prints')}
+                    onClick={() => navigate('/prints')}
                     className="text-xs uppercase tracking-[0.2em]"
                 >
                     <Sparkles size={16} />
@@ -138,13 +143,13 @@ const MainLayout = ({ children, currentView, setView, activeProject }) => {
 
             {/* Bottom Right: Status / Scroll Indicator */}
             <div className="fixed bottom-6 right-6 md:bottom-10 md:right-10 z-40 mix-blend-difference text-[#F2F0EB]">
-                {currentView === 'home' ? (
+                {currentPath === '/' ? (
                     <div className={`transition-opacity duration-500 ${!isScrolled ? 'opacity-100' : 'opacity-0'}`}>
                         <span className="animate-pulse text-xs tracking-widest">SCROLL TO EXPLORE</span>
                     </div>
                 ) : (
                     <button
-                        onClick={() => setView('home')}
+                        onClick={() => navigate('/')}
                         className="flex items-center gap-2 text-xs uppercase tracking-widest hover:gap-4 transition-all"
                     >
                         Close <div className="w-8 h-[1px] bg-current" />

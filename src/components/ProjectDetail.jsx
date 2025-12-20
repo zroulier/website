@@ -1,8 +1,23 @@
 import React, { useState } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
+import { useParams, useNavigate } from 'react-router-dom';
 import MediaFrame from './MediaFrame';
+import { DATA } from '../data/projects';
 
-const ProjectDetail = ({ project }) => {
+const ProjectDetail = () => {
+    const { projectId } = useParams();
+    const navigate = useNavigate();
+    const project = DATA.projects.find(p => p.id === projectId);
+
+    if (!project) {
+        return (
+            <div className="w-full h-screen flex items-center justify-center">
+                <button onClick={() => navigate('/')} className="text-xs uppercase tracking-widest">
+                    Project not found. Return Home
+                </button>
+            </div>
+        );
+    }
     const { scrollYProgress } = useScroll();
     const y = useTransform(scrollYProgress, [0, 1], [0, -50]);
     const [activeImageIndex, setActiveImageIndex] = useState(0);

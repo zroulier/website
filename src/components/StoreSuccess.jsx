@@ -1,7 +1,9 @@
 import React, { useEffect } from 'react';
 import { motion } from 'framer-motion';
+import { useNavigate } from 'react-router-dom';
 
-const StoreSuccess = ({ setView }) => {
+const StoreSuccess = () => {
+    const navigate = useNavigate();
     return (
         <motion.div
             initial={{ opacity: 0 }}
@@ -16,7 +18,7 @@ const StoreSuccess = ({ setView }) => {
                     You will receive an email shortly with your digital download link and receipt.
                 </p>
                 <button
-                    onClick={() => setView('home')}
+                    onClick={() => navigate('/')}
                     className="border-b border-[#2A2A2A] pb-1 hover:opacity-50 transition-opacity uppercase text-xs tracking-[0.2em]"
                 >
                     Back to Home
