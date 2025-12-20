@@ -250,6 +250,7 @@ const Home = ({ setActiveProject }) => {
                     {DATA.gallery.map((item, i) => (
                         <div
                             key={item.id}
+                            id={`gallery-item-${item.id}`}
                             className="break-inside-avoid group relative"
                             onMouseEnter={() => {
                                 if (resetTimeoutRef.current) {

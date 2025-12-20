@@ -1,7 +1,9 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, ExternalLink, MapPin } from 'lucide-react';
+import { DATA } from '../data/projects';
 import { parseCoords } from '../utils/coords';
+import { useNavigate } from 'react-router-dom';
 
 const MAP_STYLES = [
     {
@@ -219,12 +221,15 @@ const MAP_STYLES = [
 const MapModal = ({ isOpen, onClose, coordsString, title }) => {
     const mapRef = useRef(null);
     const googleMapRef = useRef(null);
-    const [mapError, setMapError] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
+    const [mapError, setMapError] = useState(false);
+    const navigate = useNavigate();
 
-    const parsedCoords = parseCoords(coordsString);
+    // Parse provided coordinates for centering
+    const centerCoords = parseCoords(coordsString);
 
     useEffect(() => {
+        if (!isOpen) return;
         if (isOpen) {
             document.body.style.overflow = 'hidden';
         } else {
@@ -302,10 +307,10 @@ const MapModal = ({ isOpen, onClose, coordsString, title }) => {
 
             try {
                 const mapOptions = {
-                    center: parsedCoords,
-                    zoom: 11,
+                    center: centerCoords || { lat: 0, lng: 0 },
+                    zoom: centerCoords ? 11 : 2,
                     styles: MAP_STYLES,
-                    disableDefaultUI: true, // Minimal UI
+                    disableDefaultUI: true,
                     zoomControl: true,
                     mapTypeControl: false,
                     streetViewControl: false,
@@ -324,12 +329,51 @@ const MapModal = ({ isOpen, onClose, coordsString, title }) => {
                     anchor: new window.google.maps.Point(12, 22),
                 };
 
-                new window.google.maps.Marker({
-                    position: parsedCoords,
-                    map: googleMapRef.current,
-                    title: title,
-                    icon: svgMarker
+                // Add Project Markers
+                DATA.projects.forEach(project => {
+                    const coords = parseCoords(project.coords);
+                    if (coords) {
+                        const marker = new window.google.maps.Marker({
+                            position: coords,
+                            map: googleMapRef.current,
+                            title: project.title,
+                            icon: svgMarker
+                        });
+
+                        marker.addListener('click', () => {
+                            onClose();
+                            navigate(`/project/${project.id}`);
+                        });
+                    }
                 });
+
+                // Add Gallery Markers
+                DATA.gallery.forEach(item => {
+                    if (item.coords) {
+                        const coords = parseCoords(item.coords);
+                        if (coords) {
+                            const marker = new window.google.maps.Marker({
+                                position: coords,
+                                map: googleMapRef.current,
+                                title: item.location,
+                                icon: svgMarker
+                            });
+
+                            marker.addListener('click', () => {
+                                onClose();
+                                navigate('/');
+                                // Small delay to ensure navigation completes/page renders
+                                setTimeout(() => {
+                                    const element = document.getElementById(`gallery-item-${item.id}`);
+                                    if (element) {
+                                        element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                                    }
+                                }, 100);
+                            });
+                        }
+                    }
+                });
+
             } catch (error) {
                 console.error("Map init error:", error);
                 setMapError(true);
@@ -338,7 +382,7 @@ const MapModal = ({ isOpen, onClose, coordsString, title }) => {
 
         initMap();
 
-    }, [isOpen, coordsString]);
+    }, [isOpen]);
 
     if (!isOpen) return null;
 
