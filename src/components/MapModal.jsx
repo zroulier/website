@@ -338,7 +338,7 @@ const MapModal = ({ isOpen, onClose, coordsString, title }) => {
 
         initMap();
 
-    }, [isOpen, parsedCoords]);
+    }, [isOpen, coordsString]);
 
     if (!isOpen) return null;
 
@@ -367,10 +367,10 @@ const MapModal = ({ isOpen, onClose, coordsString, title }) => {
                         onClick={(e) => e.stopPropagation()}
                     >
                         {/* Header */}
-                        <div className="absolute top-0 left-0 right-0 z-10 flex items-center justify-between p-6 border-b border-white/10 bg-black/30 backdrop-blur-md shadow-sm">
+                        <div className="absolute top-0 left-0 right-0 z-10 flex items-center justify-between p-6 border-b border-black/5 bg-white/70 backdrop-blur-md shadow-sm">
                             <div>
-                                <h3 className="text-[#F2F0EB] font-serif italic text-xl md:text-2xl">{title}</h3>
-                                <p className="text-xs font-mono text-neutral-400 mt-1">{coordsString}</p>
+                                <h3 className="text-[#2A2A2A] font-sans text-xl md:text-2xl tracking-tight font-light">{title}</h3>
+                                <p className="text-xs font-mono text-neutral-600 mt-1">{coordsString}</p>
                             </div>
 
                             <div className="flex items-center gap-4">
@@ -378,14 +378,14 @@ const MapModal = ({ isOpen, onClose, coordsString, title }) => {
                                     href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(coordsString)}`}
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    className="hidden md:flex items-center gap-2 text-xs uppercase tracking-widest text-neutral-400 hover:text-[#F2F0EB] transition-colors"
+                                    className="hidden md:flex items-center gap-2 text-xs uppercase tracking-widest text-neutral-600 hover:text-[#2A2A2A] transition-colors"
                                 >
                                     <span>Open Maps</span>
                                     <ExternalLink size={14} />
                                 </a>
                                 <button
                                     onClick={onClose}
-                                    className="p-2 hover:bg-white/10 rounded-full transition-colors text-[#F2F0EB]"
+                                    className="p-2 hover:bg-black/5 rounded-full transition-colors text-[#2A2A2A]"
                                 >
                                     <X size={20} />
                                 </button>

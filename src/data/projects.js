@@ -101,6 +101,7 @@ export const DATA = {
       id: 1,
       src: 'https://imgur.com/JcYMLbs.jpg',
       location: 'Toledo',
+      coords: '39.86° N, 4.02° W',
       year: '2024',
       orientation: 'landscape'
     },
@@ -108,6 +109,7 @@ export const DATA = {
       id: 2,
       src: 'https://imgur.com/24ww2T8.jpg',
       location: 'Denver',
+      coords: '39.73° N, 104.99° W',
       year: '2024',
       orientation: 'portrait'
     },
@@ -115,6 +117,7 @@ export const DATA = {
       id: 3,
       src: 'https://imgur.com/MOpItb5.jpg',
       location: 'Lisboa',
+      coords: '38.72° N, 9.13° W',
       year: '2024',
       orientation: 'landscape'
     },
@@ -122,6 +125,7 @@ export const DATA = {
       id: 4,
       src: 'https://imgur.com/Hdj46ri.jpg',
       location: 'Sevilla',
+      coords: '37.38° N, 5.98° W',
       year: '2024',
       orientation: 'landscape'
     },
@@ -129,6 +133,7 @@ export const DATA = {
       id: 5,
       src: 'https://imgur.com/NCGqQX6.jpg',
       location: 'Vienna',
+      coords: '48.20° N, 16.37° E',
       year: '2024',
       orientation: 'landscape'
     },
@@ -136,6 +141,7 @@ export const DATA = {
       id: 6,
       src: 'https://imgur.com/9S6b50E.jpg',
       location: 'Swiss Alps',
+      coords: '46.56° N, 8.01° E',
       year: '2024',
       orientation: 'portrait'
     }

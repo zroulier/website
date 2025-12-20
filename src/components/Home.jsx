@@ -248,7 +248,21 @@ const Home = ({ setActiveProject }) => {
             < section id="gallery-section" className="relative w-full min-h-screen snap-start snap-always bg-[#F2F0EB] p-6 md:p-20 flex flex-col justify-center" >
                 <div className="columns-1 md:columns-2 lg:columns-3 gap-4 space-y-4">
                     {DATA.gallery.map((item, i) => (
-                        <div key={item.id} className="break-inside-avoid">
+                        <div
+                            key={item.id}
+                            className="break-inside-avoid group relative"
+                            onMouseEnter={() => {
+                                if (resetTimeoutRef.current) {
+                                    clearTimeout(resetTimeoutRef.current);
+                                }
+                                setActiveProject({ ...item, title: item.location });
+                            }}
+                            onMouseLeave={() => {
+                                resetTimeoutRef.current = setTimeout(() => {
+                                    setActiveProject(null);
+                                }, 3000);
+                            }}
+                        >
                             <img
                                 src={item.src}
                                 alt={item.location}
