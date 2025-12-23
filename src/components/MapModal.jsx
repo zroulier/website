@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, ExternalLink, MapPin } from 'lucide-react';
 import { DATA } from '../data/projects';
-import { parseCoords } from '../utils/coords';
+import { formatCoords } from '../utils/coords';
 import { useNavigate } from 'react-router-dom';
 
 const MAP_STYLES = [
@@ -218,15 +218,18 @@ const MAP_STYLES = [
     }
 ];
 
-const MapModal = ({ isOpen, onClose, coordsString, title }) => {
+const MapModal = ({ isOpen, onClose, coords, title }) => {
     const mapRef = useRef(null);
     const googleMapRef = useRef(null);
     const [isLoading, setIsLoading] = useState(true);
     const [mapError, setMapError] = useState(false);
-    const navigate = useNavigate();
 
-    // Parse provided coordinates for centering
-    const centerCoords = parseCoords(coordsString);
+    const navigate = useNavigate();
+    const mapContainerRef = useRef(null);
+
+    // Coordinates are now passed directly as object
+    const centerCoords = coords;
+    const displayCoords = formatCoords(coords);
 
     useEffect(() => {
         if (!isOpen) return;
@@ -331,10 +334,10 @@ const MapModal = ({ isOpen, onClose, coordsString, title }) => {
 
                 // Add Project Markers
                 DATA.projects.forEach(project => {
-                    const coords = parseCoords(project.coords);
-                    if (coords) {
+                    const projectCoords = project.coords; // Already numeric object
+                    if (projectCoords) {
                         const marker = new window.google.maps.Marker({
-                            position: coords,
+                            position: projectCoords,
                             map: googleMapRef.current,
                             title: project.title,
                             icon: svgMarker
@@ -350,10 +353,10 @@ const MapModal = ({ isOpen, onClose, coordsString, title }) => {
                 // Add Gallery Markers
                 DATA.gallery.forEach(item => {
                     if (item.coords) {
-                        const coords = parseCoords(item.coords);
-                        if (coords) {
+                        const itemCoords = item.coords; // Already numeric object
+                        if (itemCoords) {
                             const marker = new window.google.maps.Marker({
-                                position: coords,
+                                position: itemCoords,
                                 map: googleMapRef.current,
                                 title: item.location,
                                 icon: svgMarker
@@ -414,12 +417,12 @@ const MapModal = ({ isOpen, onClose, coordsString, title }) => {
                         <div className="absolute top-0 left-0 right-0 z-10 flex items-center justify-between p-6 border-b border-black/5 bg-white/70 backdrop-blur-md shadow-sm">
                             <div>
                                 <h3 className="text-[#2A2A2A] font-sans text-xl md:text-2xl tracking-tight font-light">{title}</h3>
-                                <p className="text-xs font-mono text-neutral-600 mt-1">{coordsString}</p>
+                                <p className="text-xs font-mono text-neutral-600 mt-1">{displayCoords}</p>
                             </div>
 
                             <div className="flex items-center gap-4">
                                 <a
-                                    href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(coordsString)}`}
+                                    href={`https://www.google.com/maps/search/?api=1&query=${centerCoords ? `${centerCoords.lat},${centerCoords.lng}` : ''}`}
                                     target="_blank"
                                     rel="noopener noreferrer"
                                     className="hidden md:flex items-center gap-2 text-xs uppercase tracking-widest text-neutral-600 hover:text-[#2A2A2A] transition-colors"
@@ -443,7 +446,7 @@ const MapModal = ({ isOpen, onClose, coordsString, title }) => {
                                     <MapPin size={32} />
                                     <p className="text-sm uppercase tracking-widest">Map Unavailable</p>
                                     <a
-                                        href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(coordsString)}`}
+                                        href={`https://www.google.com/maps/search/?api=1&query=${centerCoords ? `${centerCoords.lat},${centerCoords.lng}` : ''}`}
                                         target="_blank"
                                         rel="noopener noreferrer"
                                         className="text-xs underline hover:text-white"
@@ -452,6 +455,7 @@ const MapModal = ({ isOpen, onClose, coordsString, title }) => {
                                     </a>
                                 </div>
                             ) : (
+
                                 <div ref={mapRef} className="w-full h-full" />
                             )}
                         </div>
@@ -459,7 +463,7 @@ const MapModal = ({ isOpen, onClose, coordsString, title }) => {
                         {/* Mobile Footer Action */}
                         <div className="md:hidden p-4 border-t border-neutral-800 bg-[#1A1A1A] flex justify-center">
                             <a
-                                href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(coordsString)}`}
+                                href={`https://www.google.com/maps/search/?api=1&query=${centerCoords ? `${centerCoords.lat},${centerCoords.lng}` : ''}`}
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 className="flex items-center gap-2 text-xs uppercase tracking-widest text-neutral-400 hover:text-[#F2F0EB] transition-colors"

@@ -1,25 +1,16 @@
-export const parseCoords = (coordString) => {
-    if (!coordString) return null;
-
-    try {
-        // Expected format: "46.54° N, 11.61° E"
-        // Regex to capture number and direction
-        const regex = /([\d.]+)°\s*([NS]),\s*([\d.]+)°\s*([EW])/;
-        const match = coordString.match(regex);
-
-        if (!match) return null;
-
-        let lat = parseFloat(match[1]);
-        if (match[2] === 'S') lat = -lat;
-
-        let lng = parseFloat(match[3]);
-        if (match[4] === 'W') lng = -lng;
-
-        if (isNaN(lat) || isNaN(lng)) return null;
-
-        return { lat, lng };
-    } catch (e) {
-        console.error("Error parsing coordinates:", e);
+export const formatCoords = (coords) => {
+    if (!coords || typeof coords.lat !== 'number' || typeof coords.lng !== 'number') {
         return null;
     }
+
+    const { lat, lng } = coords;
+
+    const latDir = lat >= 0 ? 'N' : 'S';
+    const lngDir = lng >= 0 ? 'E' : 'W';
+
+    // Round to 2 decimal places for display
+    const latDisplay = Math.abs(lat).toFixed(2);
+    const lngDisplay = Math.abs(lng).toFixed(2);
+
+    return `${latDisplay}° ${latDir}, ${lngDisplay}° ${lngDir}`;
 };

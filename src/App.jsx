@@ -3,6 +3,7 @@ import { Routes, Route, useLocation, useNavigate } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
 import Intro from './components/Intro';
 import MainLayout from './layouts/MainLayout';
+import { HintProvider } from './context/HintContext';
 import Home from './components/Home';
 import ProjectDetail from './components/ProjectDetail';
 import About from './components/About';
@@ -52,35 +53,37 @@ export default function App() {
       </AnimatePresence>
 
       {!loading && (
-        <MainLayout activeProject={activeProject}>
-          <AnimatePresence mode="wait">
-            <Routes location={location} key={location.pathname}>
-              <Route path="/" element={
-                <motion.div
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  transition={{ duration: 0.5 }}
-                >
-                  <Home setActiveProject={setActiveProject} />
-                </motion.div>
-              } />
-              <Route path="/project/:projectId" element={
-                <motion.div
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                >
-                  <ProjectDetail />
-                </motion.div>
-              } />
-              <Route path="/about" element={<About key="about" />} />
-              <Route path="/contact" element={<Contact key="contact" />} />
-              <Route path="/prints" element={<Prints key="prints" />} />
-              <Route path="/success" element={<StoreSuccess key="success" />} />
-            </Routes>
-          </AnimatePresence>
-        </MainLayout>
+        <HintProvider>
+          <MainLayout activeProject={activeProject}>
+            <AnimatePresence mode="wait">
+              <Routes location={location} key={location.pathname}>
+                <Route path="/" element={
+                  <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.5 }}
+                  >
+                    <Home setActiveProject={setActiveProject} />
+                  </motion.div>
+                } />
+                <Route path="/project/:projectId" element={
+                  <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                  >
+                    <ProjectDetail />
+                  </motion.div>
+                } />
+                <Route path="/about" element={<About key="about" />} />
+                <Route path="/contact" element={<Contact key="contact" />} />
+                <Route path="/prints" element={<Prints key="prints" />} />
+                <Route path="/success" element={<StoreSuccess key="success" />} />
+              </Routes>
+            </AnimatePresence>
+          </MainLayout>
+        </HintProvider>
       )}
     </>
   );

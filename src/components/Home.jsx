@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react';
 import { motion } from 'framer-motion';
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, ArrowDown } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { DATA } from '../data/projects';
 
@@ -9,7 +9,9 @@ const Home = ({ setActiveProject }) => {
     const [hoveredProject, setHoveredProject] = useState(null);
     const [isSideImageHovered, setIsSideImageHovered] = useState(false);
     const mobileSectionsRef = React.useRef([]);
+    const galleryItemsRef = useRef([]);
     const resetTimeoutRef = useRef(null);
+    const desktopFirstProjectRef = useRef(null);
 
     // Scroll to top on mount
     React.useEffect(() => {
@@ -24,9 +26,19 @@ const Home = ({ setActiveProject }) => {
                 entries.forEach((entry) => {
                     if (entry.isIntersecting) {
                         const projectId = entry.target.getAttribute('data-project-id');
-                        const project = DATA.projects.find(p => p.id === projectId);
-                        if (project) {
-                            setActiveProject(project);
+                        if (projectId) {
+                            const project = DATA.projects.find(p => p.id === projectId);
+                            if (project) {
+                                setActiveProject(project);
+                            }
+                        }
+
+                        const galleryId = entry.target.getAttribute('data-gallery-id');
+                        if (galleryId) {
+                            const item = DATA.gallery.find(g => String(g.id) === galleryId);
+                            if (item) {
+                                setActiveProject({ ...item, title: item.location });
+                            }
                         }
                     }
                 });
@@ -40,9 +52,16 @@ const Home = ({ setActiveProject }) => {
             if (section) observer.observe(section);
         });
 
+        galleryItemsRef.current.forEach((item) => {
+            if (item) observer.observe(item);
+        });
+
         return () => {
             mobileSectionsRef.current.forEach((section) => {
                 if (section) observer.unobserve(section);
+            });
+            galleryItemsRef.current.forEach((item) => {
+                if (item) observer.unobserve(item);
             });
         };
     }, [setActiveProject]);
@@ -75,11 +94,11 @@ const Home = ({ setActiveProject }) => {
                             }}
                         >
                             {/* Background Video */}
-                            <div className="absolute inset-0 z-0">
+                            <div className="absolute top-0 left-0 right-0 bottom-[50px] z-0">
                                 {isVimeo ? (
                                     <iframe
                                         src={`https://player.vimeo.com/video/${vimeoId}?background=1&autoplay=1&loop=1&byline=0&title=0`}
-                                        className="w-full h-full object-cover scale-[1.35] pointer-events-none"
+                                        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 h-full aspect-[16/9] max-w-none pointer-events-none"
                                         frameBorder="0"
                                         allow="autoplay; fullscreen; picture-in-picture"
                                         allowFullScreen
@@ -110,7 +129,27 @@ const Home = ({ setActiveProject }) => {
                                 <p className="text-xs tracking-widest uppercase text-[#F2F0EB] mt-4 opacity-80">
                                     {project.subtitle}
                                 </p>
+                                <button
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        navigate(`/project/${project.id}`);
+                                    }}
+                                    className="mt-12 px-8 py-3 bg-[#F2F0EB]/10 backdrop-blur-lg border border-[#F2F0EB]/20 rounded-full text-xs tracking-widest uppercase text-[#F2F0EB] shadow-lg active:scale-95 transition-all duration-300"
+                                >
+                                    Open Project {project.title}
+                                </button>
                             </div >
+
+                            {/* Scroll Hint */}
+                            <div className="absolute bottom-24 left-0 w-full flex flex-col items-center z-10 pointer-events-none">
+                                <span className="text-[10px] tracking-[0.2em] uppercase text-[#F2F0EB] opacity-70 mb-2">Scroll to Explore More</span>
+                                <motion.div
+                                    animate={{ y: [0, 5, 0] }}
+                                    transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+                                >
+                                    <ArrowDown size={14} className="text-[#F2F0EB] opacity-70" />
+                                </motion.div>
+                            </div>
                         </section >
                     );
                 })}
@@ -183,6 +222,7 @@ const Home = ({ setActiveProject }) => {
                                         navigate(`/project/${project.id}`);
                                     }}
                                     className="group cursor-pointer w-full md:w-auto relative"
+                                    ref={i === 0 ? desktopFirstProjectRef : null}
                                 >
                                     {/* Numbering */}
                                     <span className="hidden md:inline-block absolute -left-8 top-1/2 -translate-y-1/2 text-xs font-mono text-neutral-900 opacity-0 group-hover:opacity-100 transition-all duration-500 transform -translate-x-4 group-hover:translate-x-0">
@@ -192,7 +232,7 @@ const Home = ({ setActiveProject }) => {
                                     {/* Title */}
                                     <motion.h2
                                         layoutId={`title-${project.id}`}
-                                        className="text-5xl md:text-8xl lg:text-9xl font-serif italic text-transparent text-stroke-thin md:text-stroke hover:text-[#2A2A2A] transition-colors duration-500 ease-out text-center md:text-left"
+                                        className="text-5xl md:text-8xl lg:text-9xl font-serif italic text-transparent text-stroke-thin md:text-stroke group-hover:text-[#2A2A2A] transition-colors duration-500 ease-out text-center md:text-left"
                                         style={{
                                             WebkitTextStroke: hoveredProject === project.id ? '0px' : '1.25px #2A2A2A'
                                         }}
@@ -203,7 +243,7 @@ const Home = ({ setActiveProject }) => {
                                     {/* Subtitle Reveal */}
                                     <div className="h-0 overflow-hidden group-hover:h-8 transition-all duration-500 flex justify-center md:justify-start items-center gap-4">
                                         <span className="text-xs tracking-widest uppercase text-neutral-900 mt-2 block">{project.subtitle}</span>
-                                        <ArrowRight size={14} className="mt-2 text-neutral-400 opacity-0 group-hover:opacity-100 -translate-x-4 group-hover:translate-x-0 transition-all duration-500 delay-100" />
+                                        <ArrowRight size={14} className="mt-2 text-neutral-900 opacity-0 group-hover:opacity-100 -translate-x-4 group-hover:translate-x-0 transition-all duration-500 delay-100" />
                                     </div>
                                 </motion.div>
                             ))
@@ -245,12 +285,14 @@ const Home = ({ setActiveProject }) => {
             </section >
 
             {/* Collage Section */}
-            < section id="gallery-section" className="relative w-full min-h-screen snap-start snap-always bg-[#F2F0EB] p-6 md:p-20 flex flex-col justify-center" >
+            < section id="gallery-section" className="relative w-full min-h-screen snap-start snap-always bg-[#F2F0EB] px-6 pt-20 pb-32 md:px-20 md:pt-20 md:pb-40 flex flex-col justify-center" >
                 <div className="columns-1 md:columns-2 lg:columns-3 gap-4 space-y-4">
                     {DATA.gallery.map((item, i) => (
                         <div
                             key={item.id}
                             id={`gallery-item-${item.id}`}
+                            data-gallery-id={item.id}
+                            ref={el => galleryItemsRef.current[i] = el}
                             className="break-inside-avoid group relative"
                             onMouseEnter={() => {
                                 if (resetTimeoutRef.current) {
@@ -284,6 +326,9 @@ const Home = ({ setActiveProject }) => {
                     ))}
                 </div>
             </section >
+
+
+
         </>
     );
 };
