@@ -14,6 +14,7 @@
     "@aws-sdk/s3-request-presigner": "^3.954.0",
     "@stripe/react-stripe-js": "^5.4.1",
     "@stripe/stripe-js": "^8.6.0",
+    "@upstash/redis": "^1.35.8",
     "framer-motion": "^12.23.25",
     "lucide-react": "^0.555.0",
     "react": "^19.2.0",

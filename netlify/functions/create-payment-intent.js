@@ -2,16 +2,15 @@ import Stripe from 'stripe';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
-const calculateOrderAmount = (printId) => {
-    // SECURITY: Define prices locally on server to prevent import crashes
-    const prices = {
-        '1': 2500, // $0.50 for testing
-        '2': 2500,
-        '3': 2500
-    };
+import { printsCatalog } from '../../src/data/printsCatalog.js';
 
-    // Fallback security price
-    return prices[printId] || 2500;
+const calculateOrderAmount = (printId) => {
+    // Find the print in the catalog
+    // Convert printId to string to ensure safe comparison
+    const print = printsCatalog.find(p => p.id === String(printId));
+
+    // Return the price from the catalog, or null if not found
+    return print ? print.priceCents : null;
 };
 
 export default async (req, context) => {
@@ -24,6 +23,13 @@ export default async (req, context) => {
 
         // Calculate amount
         const amount = calculateOrderAmount(printId);
+
+        if (!amount) {
+            return new Response(JSON.stringify({ error: 'Invalid print ID' }), {
+                status: 400,
+                headers: { 'Content-Type': 'application/json' },
+            });
+        }
 
         const paymentIntent = await stripe.paymentIntents.create({
             amount,

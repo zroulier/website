@@ -1,5 +1,27 @@
+/**
+ * Validates if the coordinates object contains valid numeric lat and lng.
+ * @param {object} coords - { lat, lng }
+ * @returns {boolean}
+ */
+export const isValidCoords = (coords) => {
+    return (
+        coords &&
+        typeof coords === 'object' &&
+        typeof coords.lat === 'number' &&
+        Number.isFinite(coords.lat) &&
+        typeof coords.lng === 'number' &&
+        Number.isFinite(coords.lng)
+    );
+};
+
+/**
+ * Formats coordinates for display (e.g., "46.54° N, 11.61° E").
+ * Returns null if coordinates are invalid.
+ * @param {object} coords 
+ * @returns {string|null}
+ */
 export const formatCoords = (coords) => {
-    if (!coords || typeof coords.lat !== 'number' || typeof coords.lng !== 'number') {
+    if (!isValidCoords(coords)) {
         return null;
     }
 

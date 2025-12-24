@@ -2,7 +2,7 @@ import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import PaymentModal from './PaymentModal';
-import { prints } from '../data/prints';
+import { printsCatalog } from '../data/printsCatalog';
 
 const Prints = () => {
     const navigate = useNavigate();
@@ -37,7 +37,7 @@ const Prints = () => {
                     </motion.div>
 
                     <div className="columns-1 md:columns-2 lg:columns-3 gap-10 space-y-12 block">
-                        {prints.map((print, i) => (
+                        {printsCatalog.map((print, i) => (
                             <motion.div
                                 key={print.id}
                                 initial={{ y: 100, opacity: 0 }}
@@ -47,9 +47,9 @@ const Prints = () => {
                                 onClick={() => setSelectedPrint(print)}
                             >
                                 <div className="bg-[#E5E3DD] mb-6 relative overflow-hidden">
-                                    {print.src ? (
+                                    {print.imageSrc ? (
                                         <img
-                                            src={print.src}
+                                            src={print.imageSrc}
                                             alt={print.title}
                                             className="w-full h-auto block"
                                         />

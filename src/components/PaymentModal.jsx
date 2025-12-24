@@ -182,7 +182,7 @@ const PaymentModal = ({ print, onClose }) => {
                 initial={{ scale: 0.9, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1 }}
                 exit={{ scale: 0.9, opacity: 0 }}
-                className="bg-[#F2F0EB] w-full max-w-lg p-8 md:p-12 shadow-2xl relative"
+                className="bg-[#F2F0EB] w-full max-w-lg max-h-[85vh] overflow-y-auto rounded-xl p-8 md:p-12 shadow-2xl relative"
                 onClick={(e) => e.stopPropagation()}
             >
                 <div className="mb-8 text-center">

@@ -19,6 +19,21 @@ const MainLayout = ({ children, activeProject }) => {
     const [isMapOpen, setIsMapOpen] = React.useState(false);
     const [frozenMapData, setFrozenMapData] = React.useState(null);
     const coordsRef = React.useRef(null);
+    const bottomSentinelRef = React.useRef(null);
+
+    React.useEffect(() => {
+        const observer = new IntersectionObserver(
+            ([entry]) => {
+                setIsBottom(entry.isIntersecting);
+            },
+            {
+                threshold: 0,
+                rootMargin: '0px' // Trigger immediately as spacer enters viewport (under footer)
+            }
+        );
+        if (bottomSentinelRef.current) observer.observe(bottomSentinelRef.current);
+        return () => observer.disconnect();
+    }, []);
 
     const currentCoords = activeProject ? activeProject.coords : { lat: 39.7300, lng: -104.9900 };
     const currentTitle = activeProject ? activeProject.title : 'Home';
@@ -30,12 +45,10 @@ const MainLayout = ({ children, activeProject }) => {
     };
 
     const handleScroll = (e) => {
-        const { scrollTop, scrollHeight, clientHeight } = e.target;
-        const bottomThreshold = 50;
+        const { scrollTop } = e.target;
         const scrolledThreshold = 50;
 
         setIsScrolled(scrollTop > scrolledThreshold);
-        setIsBottom(Math.abs(scrollHeight - clientHeight - scrollTop) < bottomThreshold);
     };
 
     return (
@@ -45,12 +58,13 @@ const MainLayout = ({ children, activeProject }) => {
 
             {/* Mobile Glass Header Background */}
             <div
-                className={`md:hidden fixed top-0 left-0 w-full h-24 z-30 transition-opacity duration-500 backdrop-blur-xl bg-[#F2F0EB]/10 border-b border-[#F2F0EB]/20 shadow-sm ${currentPath.startsWith('/project') ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}
+                className={`md:hidden fixed top-0 left-0 w-full h-20 z-30 transition-opacity duration-500 backdrop-blur-xl bg-[#F2F0EB]/20 backdrop-brightness-110 border-b border-[#F2F0EB]/20 shadow-sm ${currentPath.startsWith('/project') ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}
             />
 
             {/* Top Left: Identity */}
             <div
-                className={`fixed top-6 left-6 md:top-10 md:left-10 z-40 mix-blend-difference text-[#F2F0EB] transition-opacity duration-500 ${currentPath.startsWith('/project') ? 'opacity-100 md:opacity-0 md:pointer-events-none' : (isScrolled ? 'opacity-100 md:opacity-0 md:pointer-events-none' : 'opacity-100')}`}
+                id="signature-anchor"
+                className={`fixed top-6 left-6 md:top-10 md:left-10 z-40 md:mix-blend-difference md:text-[#F2F0EB] transition-opacity duration-500 ${currentPath.startsWith('/project') ? 'opacity-100 md:opacity-0 md:pointer-events-none' : (isScrolled ? 'opacity-100 md:opacity-0 md:pointer-events-none' : 'opacity-100')}`}
             >
                 <button
                     onClick={() => navigate('/')}
@@ -59,33 +73,36 @@ const MainLayout = ({ children, activeProject }) => {
                     <img
                         src="/signature.png"
                         alt="Zachary Roulier"
-                        className="h-8 md:h-10 w-auto brightness-0 invert"
+                        className="h-8 md:h-10 w-auto md:brightness-0 md:invert"
                     />
                 </button>
             </div>
 
             {/* Desktop Glass Footer Background */}
             <div
-                className={`hidden md:block fixed bottom-0 left-0 w-full h-20 z-30 transition-opacity duration-500 backdrop-blur-xl bg-white/10 border-t border-white/20 shadow-sm ${currentPath.startsWith('/project') ? 'opacity-0 pointer-events-none' : (isScrolled ? 'opacity-100' : 'opacity-0 pointer-events-none')}`}
+                className={`hidden md:block fixed bottom-0 left-0 w-full h-20 z-30 transition-opacity duration-500 backdrop-blur-xl bg-[#F2F0EB]/20 backdrop-brightness-110 border-t border-[#F2F0EB]/20 shadow-sm ${currentPath.startsWith('/project') ? 'opacity-0 pointer-events-none' : ((isScrolled && !isBottom) ? 'opacity-100' : 'opacity-0 pointer-events-none')}`}
             />
 
             {/* Top Right: Coordinates / Context (Fades out on scroll) */}
             <div
-                className={`fixed top-6 right-6 md:top-10 md:right-10 z-40 text-neutral-900 text-right transition-opacity duration-500 ${currentPath.startsWith('/project') ? 'opacity-100 md:opacity-0 md:pointer-events-none' : (isScrolled ? 'opacity-100 md:opacity-0 md:pointer-events-none' : 'opacity-100')}`}
+                className={`fixed top-6 right-6 md:top-10 md:right-10 z-40 text-black md:text-neutral-900 text-right transition-opacity duration-500 flex items-center justify-end gap-2 h-8 md:h-auto md:block md:gap-0 ${currentPath.startsWith('/project') ? 'opacity-100 md:opacity-0 md:pointer-events-none' : (isScrolled ? 'opacity-100 md:opacity-0 md:pointer-events-none' : 'opacity-100')}`}
             >
                 {hasValidCoords ? (
                     <button
                         onClick={handleOpenMap}
-                        className="text-xs font-mono opacity-80 hover:opacity-100 transform transition-transform duration-1000 hover:scale-110 origin-right"
+                        className="text-xs font-mono opacity-100 md:opacity-80 hover:opacity-100 transform transition-transform duration-1000 hover:scale-110 origin-right"
                     >
                         {formatCoords(currentCoords)}
                     </button>
                 ) : (
-                    <p className="text-xs font-mono opacity-80">
+                    <p className="text-xs font-mono opacity-100 md:opacity-80">
                         {formatCoords(currentCoords)}
                     </p>
                 )}
-                <p className="text-xs uppercase tracking-widest font-light mt-1">
+
+                <span className="md:hidden text-xs font-light">||</span>
+
+                <p className="text-xs uppercase tracking-widest font-light md:mt-1">
                     {currentTitle}
                 </p>
             </div>
@@ -148,24 +165,24 @@ const MainLayout = ({ children, activeProject }) => {
             </div>
 
             {/* Mobile Bottom Bar */}
-            <div className="md:hidden fixed bottom-0 left-0 w-full z-50 bg-[#F2F0EB]/90 backdrop-blur-sm border-t border-neutral-200 py-4 px-6 flex justify-between items-center text-neutral-900">
+            <div className={`md:hidden fixed bottom-0 left-0 w-full z-50 py-4 px-6 flex justify-between items-center text-black border-t-0 outline-none transition-colors duration-500 ${isBottom ? 'bg-[#F2F0EB]' : 'backdrop-blur-xl bg-[#F2F0EB]/20 backdrop-brightness-110'}`}>
                 <div className="flex gap-6">
                     <button
                         onClick={() => navigate('/about')}
-                        className="text-xs uppercase tracking-[0.2em]"
+                        className="text-xs uppercase tracking-[0.2em] opacity-100"
                     >
                         [ About ]
                     </button>
                     <button
                         onClick={() => navigate('/contact')}
-                        className="text-xs uppercase tracking-[0.2em]"
+                        className="text-xs uppercase tracking-[0.2em] opacity-100"
                     >
                         [ Contact ]
                     </button>
                 </div>
                 <button
                     onClick={() => navigate('/prints')}
-                    className="text-xs uppercase tracking-[0.2em]"
+                    className="text-xs uppercase tracking-[0.2em] opacity-100"
                 >
                     <Sparkles size={16} />
                 </button>
@@ -193,6 +210,7 @@ const MainLayout = ({ children, activeProject }) => {
                 className="relative w-full h-screen overflow-y-auto overflow-x-hidden no-scrollbar snap-y snap-mandatory scroll-smooth"
             >
                 {children}
+                <div ref={bottomSentinelRef} className="w-full h-40 pointer-events-none opacity-0" />
             </main>
             <MapModal
                 isOpen={isMapOpen}
