@@ -132,13 +132,13 @@ const MainLayout = ({ children, activeProject }) => {
             <div className="hidden md:flex fixed bottom-6 left-10 z-40 flex-col items-start gap-2 text-neutral-900">
                 <button
                     onClick={() => navigate('/about')}
-                    className="text-xs uppercase tracking-[0.2em] hover:italic transition-all"
+                    className="text-xs uppercase tracking-[0.2em] opacity-100 md:opacity-80 hover:opacity-100 transform transition-transform duration-1000 hover:scale-110 origin-left"
                 >
                     [ About ]
                 </button>
                 <button
                     onClick={() => navigate('/contact')}
-                    className="text-xs uppercase tracking-[0.2em] hover:italic transition-all"
+                    className="text-xs uppercase tracking-[0.2em] opacity-100 md:opacity-80 hover:opacity-100 transform transition-transform duration-1000 hover:scale-110 origin-left"
                 >
                     [ Contact ]
                 </button>

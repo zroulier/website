@@ -147,7 +147,7 @@ const Home = ({ setActiveProject }) => {
     useEffect(() => {
         const interval = setInterval(() => {
             setIsSideImageHovered(prev => !prev);
-        }, 5000);
+        }, 3500);
         return () => clearInterval(interval);
     }, []);
 
