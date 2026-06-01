@@ -68,6 +68,41 @@ export const DATA = {
       videoUrl: "https://www.youtube.com/embed/Ls4uBZI7ieA", // INSERT VIDEO LINK HERE
       description: "A tour through Aspen during peak fall foliage. This typically occurs in late September. Scroll to the end for a short cinematic video!"
     },
+{
+      id: 'thailand',
+      title: 'THAILAND',
+      subtitle: 'Incredible Island Views',
+      coords: { lat: 7.733, lng: 98.7661 },
+      year: '2026',
+      previewVideo: "https://vimeo.com/1197472400?share=copy&fl=sv&fe=ci", // Place file in public/videos/
+      images: [
+        {
+          src: 'https://imgur.com/9uNJk6w.jpg',
+          details: { drone: "DJI Air 3S", settings: "auto", postProcessing: "none" }
+        },
+        {
+          src: 'https://imgur.com/OROZWLB.jpg',
+          details: { drone: "DJI Air 3S", settings: "auto", postProcessing: "none" }
+        },
+        {
+          src: 'https://imgur.com/igwMamV.jpg',
+          details: { drone: "DJI Air 3S", settings: "auto", postProcessing: "none" }
+        },
+        {
+          src: 'https://imgur.com/VRc3NuU.jpg',
+          details: { drone: "DJI Air 3S", settings: "auto", postProcessing: "none" }
+        },
+        {
+          src: 'https://imgur.com/9UW1Xa4.jpg',
+          details: { drone: "DJI Air 3S", settings: "auto", postProcessing: "none" }
+        },
+        {
+          src: 'https://imgur.com/1zpPA1w.jpg',
+          details: { drone: "DJI Air 3S", settings: "auto", postProcessing: "none" }
+        },
+      ],
+      description: "Flying through the limestone karsts found in the islands of Thailand."
+    },
     {
       id: 'keukenhof',
       title: 'KEUKENHOF',
